@@ -73,10 +73,10 @@ const isvReplacebleLetters = [
     ['ď', 'd'],
     ['ś', 's'],
     ['ź', 'z'],
-]
+].map(([from, to]) => ({ from, to, regex: new RegExp(from, 'g') }))
 
 function getWordForms(item): string[] {
-    const word =  removeExclamationMark(Dictionary.getField(item, 'isv'))
+    const word = removeExclamationMark(Dictionary.getField(item, 'isv'))
     const add = Dictionary.getField(item, 'addition')
     const details = Dictionary.getField(item, 'partOfSpeech')
     const pos = getPartOfSpeech(details)
@@ -234,9 +234,9 @@ class DictionaryClass {
     private header: string[]
     private langsList: string[]
     private headerIndexes: Map<string, number>
-    private percentsOfChecked: {[lang: string]: string}
+    private percentsOfChecked: { [lang: string]: string }
     private words: WordList
-    private splittedMap: {[lang: string]: Map<string, string[]>}
+    private splittedMap: { [lang: string]: Map<string, string[]> }
     private isvSearchLetters: { from: string[], to: string[] }
     private isvSearchByWordForms: boolean
 
@@ -246,7 +246,7 @@ class DictionaryClass {
         this.headerIndexes = new Map()
         this.splittedMap = {}
         this.percentsOfChecked = {}
-        this.isvSearchLetters =  { from: [], to: [] }
+        this.isvSearchLetters = { from: [], to: [] }
     }
 
     public init(
@@ -451,7 +451,7 @@ class DictionaryClass {
             filterPartOfSpeech = optionPOS
                 .slice(2).replace(/[ \/]/g, '')
                 .split('+').filter(Boolean).map((elem) => elem.split('.').filter(Boolean))
-        //   filter by interface selector
+            //   filter by interface selector
         } else if (posFilter) {
             filterPartOfSpeech = [[posFilter]]
         }
@@ -469,7 +469,7 @@ class DictionaryClass {
                     // hardEtymSearch - hard etymological search for isv, otherwise - simple search
                     // when isvSearchByWordForms = false OR entered 1 symbol - searching without word forms
                     let splittedField = this.getSplittedField(hardEtymSearch ? ISV_SRC : ISV, item)
-                    if ( !this.isvSearchByWordForms || inputIsvPrepared.length === 1 ) {
+                    if (!this.isvSearchByWordForms || inputIsvPrepared.length === 1) {
                         const wordsCount = this.getField(item, ISV).split(',').length
                         splittedField = splittedField.slice(0, wordsCount)
                     }
@@ -501,10 +501,10 @@ class DictionaryClass {
                 let filterResult = true
                 // search in isv with search sensitive letters
                 if ((from === ISV || twoWaySearch) &&
-                   !hardEtymSearch && (flavorisationType === '2' || flavorisationType === '3') &&
+                    !hardEtymSearch && (flavorisationType === '2' || flavorisationType === '3') &&
                     this.isvSearchLetters.to.some((letter) => inputIsvPrepared.includes(letter))) {
                     let splittedField = this.getSplittedField(ISV_SRC, item)
-                    if ( !this.isvSearchByWordForms || inputIsvPrepared.length === 1 ) {
+                    if (!this.isvSearchByWordForms || inputIsvPrepared.length === 1) {
                         const wordsCount = this.getField(item, ISV).split(',').length
                         splittedField = splittedField.slice(0, wordsCount)
                     }
@@ -615,7 +615,7 @@ class DictionaryClass {
             }
             const add = addArray.find((elem) => !elem.startsWith('(+')) || ''
             let caseInfo = convertCases(addArray.find((elem) => elem.startsWith('(+'))?.slice(1, -1) || '')
-            if(caseInfo && caseQuestions) {
+            if (caseInfo && caseQuestions) {
                 caseInfo = getCaseTips(caseInfo.slice(1), 'nounShort')
             }
             const translate = this.getField(item, (from === ISV ? to : from))
@@ -640,12 +640,12 @@ class DictionaryClass {
             if (alphabets?.cyrillic) {
                 formattedItem.originalCyr = getCyrillic(isv, flavorisationType)
                 formattedItem.addCyr = getCyrillic(add, flavorisationType)
-                if(caseQuestions) formattedItem.caseInfoCyr = getCyrillic(caseInfo, flavorisationType)
+                if (caseQuestions) formattedItem.caseInfoCyr = getCyrillic(caseInfo, flavorisationType)
             }
             if (alphabets?.glagolitic) {
                 formattedItem.originalGla = getGlagolitic(isv, flavorisationType)
                 formattedItem.addGla = getGlagolitic(add, flavorisationType)
-                if(caseQuestions) formattedItem.caseInfoGla = getGlagolitic(caseInfo, flavorisationType)
+                if (caseQuestions) formattedItem.caseInfoGla = getGlagolitic(caseInfo, flavorisationType)
             }
 
             return formattedItem
@@ -662,7 +662,7 @@ class DictionaryClass {
     public getField(item: string[], fieldName: string) {
         return item[this.headerIndexes.get(fieldName)]
     }
-    public changeIsvSearchLetters(letters: string): {from: string[], to: string[]} {
+    public changeIsvSearchLetters(letters: string): { from: string[], to: string[] } {
         const isvSearchLetters = {
             from: [...this.isvSearchLetters.from],
             to: [...this.isvSearchLetters.to],
@@ -670,15 +670,15 @@ class DictionaryClass {
 
         for (const letter of letters) {
             isvReplacebleLetters
-                .filter((replacement) => replacement[0] === letter)
+                .filter((replacement) => replacement.from === letter)
                 .map((replacement) => {
-                    const index = isvSearchLetters.from.indexOf(replacement[0])
+                    const index = isvSearchLetters.from.indexOf(replacement.from)
                     if (index !== -1) {
                         isvSearchLetters.from.splice(index, 1)
                         isvSearchLetters.to.splice(index, 1)
                     } else {
-                        isvSearchLetters.from.push(replacement[0])
-                        isvSearchLetters.to.push(replacement[1])
+                        isvSearchLetters.from.push(replacement.from)
+                        isvSearchLetters.to.push(replacement.to)
                     }
                 })
         }
@@ -687,7 +687,7 @@ class DictionaryClass {
 
         return isvSearchLetters
     }
-    public setIsvSearchLetters(letters: {from: string[], to: string[]}): void {
+    public setIsvSearchLetters(letters: { from: string[], to: string[] }): void {
         this.isvSearchLetters = letters
     }
     public setIsvSearchByWordForms(isvSearchByWordForms: boolean): void {
@@ -759,10 +759,10 @@ class DictionaryClass {
         text = this.searchPrepare(ISV_SRC, text)
         isvReplacebleLetters
             .filter((replacement) =>
-                !this.isvSearchLetters.from.includes(replacement[0]) ||
-                flavorisationType === '3' && !['š', 'ž', 'č', 'ě', 'y'].includes(replacement[0]))
+                !this.isvSearchLetters.from.includes(replacement.from) ||
+                flavorisationType === '3' && !['š', 'ž', 'č', 'ě', 'y'].includes(replacement.from))
             .map((replacement) => {
-                text = text.replace(new RegExp(replacement[0], 'g'), replacement[1])
+                text = text.replace(replacement.regex, replacement.to)
             })
 
         return text

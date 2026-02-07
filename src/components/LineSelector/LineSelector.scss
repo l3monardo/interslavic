@@ -1,31 +1,45 @@
 .lineSelector {
   position: relative;
   display: flex;
-  height: 40px;
-  justify-content: space-between;
+  width: 100%;
+  height: 24px;
+  justify-content: flex-start;
   cursor: pointer;
   user-select: none;
+  background: var(--switcher-background);
+  border-radius: .25rem;
+  box-sizing: border-box;
 
   .slide {
     position: absolute;
-    height: 40px;
-    border-radius: .35rem;
+    top: 0;
+    left: 0;
+    width: calc(100% / var(--length));
+    height: 100%;
+    margin-left: calc(100% / var(--length) * var(--index));
+    border-radius: .25rem;
     background: var(--primary-color);
     box-shadow: var(--shadow);
     pointer-events: none;
-    transition: margin-left var(--animation-duration) ease-in-out;
+    transition: margin-left var(--animation-duration) ease-in-out, width var(--animation-duration) ease-in-out;
   }
 
   .item {
     z-index: 1;
     display: flex;
-    flex: 1 1 0;
+    flex: 1 1 0%;
+    width: calc(100% / var(--length));
+    height: 100%;
+    padding: 0 4px;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
+    color: var(--switcher-text-unselected);
+    font-size: var(--text-s);
     font-weight: 500;
     text-align: center;
+    box-sizing: border-box;
     transition: color var(--animation-duration) ease-in-out;
+    white-space: nowrap;
 
     &.active {
       color: var(--primary-color-fg);

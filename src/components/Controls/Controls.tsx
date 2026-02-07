@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { t } from 'translations'
@@ -37,12 +37,29 @@ export const Controls =
 
         const lang = useLang()
         const fromText = useFromText()
-        const spellCheck = lang.from !== 'isv'
-        const searchLanguage = toBCP47(lang.from)
+        const [inputValue, setInputValue] = useState(fromText)
+
+        // Sync local input with global state (e.g. from URL or popstate)
+        useEffect(() => {
+            setInputValue(fromText)
+        }, [fromText])
+
+        useEffect(() => {
+            if (inputValue === fromText) return
+
+            const timer = setTimeout(() => {
+                dispatch(fromTextAction(inputValue))
+            }, 200)
+
+            return () => clearTimeout(timer)
+        }, [inputValue, fromText, dispatch])
 
         const onChange = useCallback((value) => {
-            dispatch(fromTextAction(value))
-        }, [dispatch])
+            setInputValue(value)
+        }, [])
+
+        const spellCheck = lang.from !== 'isv'
+        const searchLanguage = toBCP47(lang.from)
 
         const onChangeExpand = () => dispatch(setSearchExpand(!expand))
 
@@ -50,11 +67,11 @@ export const Controls =
             <div
                 className={classNames('controls', { short })}
             >
-                <LangSelector/>
+                <LangSelector />
                 <InputText
                     testId="search-input"
                     size="L"
-                    value={fromText}
+                    value={inputValue}
                     onChange={onChange}
                     placeholder={t('typeWordLabel')}
                     type="search"

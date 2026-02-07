@@ -12,6 +12,7 @@
   margin-right: auto;
   background: var(--light);
   box-shadow: none;
+  overflow-x: hidden;
 
 
   &.expanded {
@@ -319,6 +320,7 @@
       text-align: center;
       width: 100%;
       margin-top: 12px;
+      box-sizing: border-box;
     }
   }
 

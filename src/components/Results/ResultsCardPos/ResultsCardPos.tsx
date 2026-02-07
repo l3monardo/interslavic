@@ -12,8 +12,8 @@ interface IResultsCardPosProps {
 
 export const ResultsCardPos = memo<IResultsCardPosProps>(({ details }) => (
     <Hint
-        title={expandAbbr(t, details)}
-        shortTitle={translateAbbr(t, details)}
+        title={translateAbbr(t, details)}
+        shortTitle={expandAbbr(t, details)}
     />
 ))
 

@@ -29,6 +29,7 @@ export const commonConfig = {
 }
 
 export default defineConfig({
+    base: './', // Use relative paths for assets
     publicDir: 'static',
     plugins: [
         react(),

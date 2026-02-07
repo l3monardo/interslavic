@@ -13,11 +13,6 @@ export const pages: IPage[] = [
         path: '/',
     },
     {
-        title: 'grammarTitle',
-        value: 'grammar',
-        path: '/grammar',
-    },
-    {
         title: 'viewerTitle',
         value: 'viewer',
         path: '/viewer',
@@ -35,28 +30,38 @@ export const pages: IPage[] = [
     },
 ]
 
-export const defaultPages = ['dictionary', 'grammar', 'settings', 'about']
+export const defaultPages = ['dictionary', 'settings', 'about']
 
 export function goToPage(path: string) {
-    window.history.pushState({}, document.title, `${path}`)
+    // Navigate RELATIVE to current location if possible, or usually just use state
+    // But this app uses pushState with absolute paths.
+    // Let's use the current window location to respect the base.
+    const baseUrl = window.location.pathname.replace(/\/$/, '')
+        .replace(/\/(settings|about|viewer)$/, '')
+
+    // If path is '/', go to baseUrl
+    const target = path === '/' ? (baseUrl || '/') : `${baseUrl || ''}${path}`
+
+    window.history.pushState({}, document.title, target)
 }
 
 export function getPageFromPath(): string {
-    const currentPath = window.location.pathname.split('#')[0]
-    const page = pages.find(({ path }) => (path === currentPath))
-    if (page) {
-        return page.value
-    }
+    const currentPath = window.location.pathname
+    // Check key suffixes
+    if (currentPath.endsWith('/settings')) return 'settings'
+    if (currentPath.endsWith('/about')) return 'about'
+    if (currentPath.endsWith('/viewer')) return 'viewer'
 
+    // Default to dictionary if no known suffix
     return 'dictionary'
 }
 
 export function setInitialPage() {
-    const currentPath = window.location.pathname.split('#')[0]
-    const page = pages.find(({ path }) => (path === currentPath))
-    if (!page) {
-        window.history.replaceState({}, document.title, '/')
-    }
+    // No-op or just ensure we are on a valid page?
+    // The previous logic forced a replaceState to '/' if not found.
+    // We should be careful not to break the subdirectory.
+    const page = getPageFromPath()
+    // If it is dictionary, do nothing (we are at root or /slovnik/)
 }
 
 export function getPathFromPage(page: string): string {

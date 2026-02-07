@@ -1,9 +1,7 @@
 .results-card-actions {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
   display: flex;
-  gap: 2px;
+  gap: 4px;
+  margin-top: 8px;
 
   .action-button {
     flex: 0 1 auto;
@@ -16,9 +14,14 @@
     line-height: var(--text-s-line);
     outline: none;
 
-    @media (width <= 395px) {
+    @media (width <=395px) {
       font-size: var(--text-xs);
       line-height: var(--text-xs-line);
+    }
+
+    &.active {
+      font-weight: 700;
+      text-decoration: underline;
     }
 
     &.hide {
@@ -46,8 +49,14 @@
       line-height: var(--text-xs-line);
       transition: transform var(--animation-duration) ease-in-out;
 
+      &.active {
+        background: var(--dark);
+        color: var(--light);
+        transform: scale(0.95);
+      }
+
       &:active {
-        transform: scale(.9);
+        transform: scale(0.9);
       }
 
       &:not(:first-child) {
@@ -55,5 +64,4 @@
       }
     }
   }
-
 }

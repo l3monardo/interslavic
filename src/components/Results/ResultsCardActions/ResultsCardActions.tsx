@@ -27,19 +27,14 @@ import TranslationsIcon from './images/translations-icon.svg'
 interface IResultsCardActionsProps {
     item: ITranslateResult;
     short: boolean;
+    activeTab: 'forms' | 'translations' | 'none';
+    onToggleTab: (tab: 'forms' | 'translations') => void;
 }
 
-export const ResultsCardActions = ({ item, short }: IResultsCardActionsProps) => {
+export const ResultsCardActions = ({ item, short, activeTab, onToggleTab }: IResultsCardActionsProps) => {
     const pos = getPartOfSpeech(item.details)
     const dispatch = useDispatch()
     const lang = useLang()
-
-    const showTranslations = () => {
-        dispatch(showModalDialog({
-            type: MODAL_DIALOG_TYPES.MODAL_DIALOG_TRANSLATION,
-            data: { id: item.id },
-        }))
-    }
 
     const showWordErrorModal = () => {
         dispatch(showModalDialog({
@@ -48,17 +43,6 @@ export const ResultsCardActions = ({ item, short }: IResultsCardActionsProps) =>
                 wordId: item.id,
                 isvWord: item.original,
                 translatedWord: item.translate,
-            },
-        }))
-    }
-
-    const showDetail = () => {
-        dispatch(showModalDialog({
-            type: MODAL_DIALOG_TYPES.MODAL_DIALOG_WORD_FORMS,
-            data: {
-                word: item.isv,
-                add: Dictionary.getField(item.raw, 'addition'),
-                details: Dictionary.getField(item.raw, 'partOfSpeech'),
             },
         }))
     }
@@ -94,7 +78,7 @@ export const ResultsCardActions = ({ item, short }: IResultsCardActionsProps) =>
                 aria-label={t('shareWord')}
                 onClick={shareWord}
             >
-                {short ? <ShareIcon/> : t('shareWord')}
+                {short ? <ShareIcon /> : t('shareWord')}
             </button>
             <button
                 className="action-button"
@@ -102,25 +86,25 @@ export const ResultsCardActions = ({ item, short }: IResultsCardActionsProps) =>
                 aria-label={t('reportWordError')}
                 onClick={showWordErrorModal}
             >
-                {short ? <ErrorIcon/> : t('reportWordError')}
+                {short ? <ErrorIcon /> : t('reportWordError')}
             </button>
             <button
-                className="action-button"
+                className={cn('action-button', { active: activeTab === 'translations' })}
                 type="button"
                 aria-label={t('translates')}
-                onClick={showTranslations}
+                onClick={() => onToggleTab('translations')}
             >
-                {short ? <TranslationsIcon/> : t('translates')}
+                {short ? <TranslationsIcon /> : t('translates')}
             </button>
             {wordHasForms(item.original, item.details) && (
                 <button
-                    className="action-button"
+                    className={cn('action-button', { active: activeTab === 'forms' })}
                     type="button"
                     aria-label={t('declensions')}
-                    onClick={showDetail}
+                    onClick={() => onToggleTab('forms')}
                 >
                     {short ? (
-                        <FormsIcon/>
+                        <FormsIcon />
                     ) : (
                         pos === 'verb' ? t('conjugation') : t('declensions')
                     )}

@@ -1,9 +1,15 @@
 .settings {
-  max-width: 1024px;
+  max-width: 600px;
   box-sizing: border-box;
   padding: 16px;
   margin: 0 auto 56px;
+  font-size: var(--text-m);
   pointer-events: all;
+
+  &__title {
+    font-size: var(--text-l);
+    margin-bottom: 12px;
+  }
 
   &__reload {
     padding: 10px;
@@ -17,6 +23,13 @@
     font-weight: 500;
     outline: none;
     text-decoration: none;
+  }
+
+  &__section-title {
+    font-size: var(--text-m);
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--dark);
   }
 
   &__add-langs-title {

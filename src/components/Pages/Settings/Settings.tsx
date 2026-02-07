@@ -95,30 +95,30 @@ export const Settings =
 
         return (
             <div className="settings">
-                <h4>{t('settingsTitle')}</h4>
-                <hr/>
-                <h6>{t('interfaceLanguage')}</h6>
+                <h5 className="settings__title">{t('settingsTitle')}</h5>
+                <hr />
+                <p className="settings__section-title">{t('interfaceLanguage')}</p>
                 <Selector
                     options={interfaceLanguageList}
                     value={interfaceLang}
                     onSelect={(langCode: string) => dispatch(setInterfaceLang(langCode))}
                 />
-                <hr/>
+                <hr />
                 <Checkbox
                     className="bold"
                     title={t('shortCardView')}
                     checked={isShortCardView}
                     onChange={() => dispatch(changeCardViewAction())}
                 />
-                <hr/>
+                <hr />
                 <Checkbox
                     className="bold"
                     title={t('darkTheme')}
                     checked={isDarkTheme}
                     onChange={() => dispatch(toggleThemeAction(isDarkTheme ? 'light' : 'dark'))}
                 />
-                <hr/>
-                <h6>{t('showSlavicWordsInAlphabets')}</h6>
+                <hr />
+                <p className="settings__section-title">{t('showSlavicWordsInAlphabets')}</p>
                 {
                     Object.keys(alphabets).map((alphabet) => (
                         <Checkbox
@@ -129,8 +129,8 @@ export const Settings =
                         />
                     ))
                 }
-                <hr/>
-                <h6>{t('searchSensitiveLettersForInterslavic')}</h6>
+                <hr />
+                <p className="settings__section-title">{t('searchSensitiveLettersForInterslavic')}</p>
                 <div className="settings__isv-search-letters">
                     {
                         orthographySettings.map(([title, letters]) => (
@@ -150,15 +150,15 @@ export const Settings =
                         ))
                     }
                 </div>
-                <hr/>
+                <hr />
                 <Checkbox
                     className="bold"
                     title={t('searchByIsvWordForms')}
                     checked={isvSearchByWordForms}
                     onChange={() => dispatch(changeIsvSearchByWordForms(!isvSearchByWordForms))}
                 />
-                <hr/>
-                <h6>{t('orderOfCases')}</h6>
+                <hr />
+                <p className="settings__section-title">{t('orderOfCases')}</p>
                 <Selector
                     options={orderOfCasesList.map((e) => {
                         return {
@@ -169,14 +169,14 @@ export const Settings =
                     value={orderOfCases.join(',')}
                     onSelect={(orderOfCases: string) => dispatch(changeOrderOfCases(orderOfCases.split(',')))}
                 />
-                <hr/>
+                <hr />
                 <Checkbox
                     className="bold"
                     title={t('caseQuestionsForPrepositions')}
                     checked={caseQuestions}
                     onChange={() => dispatch(changeCaseQuestions(!caseQuestions))}
                 />
-                <hr/>
+                <hr />
                 <Checkbox
                     className="bold"
                     title={t('showImperfectAndPluperfect')}
@@ -184,7 +184,7 @@ export const Settings =
                     onChange={() => dispatch(changeDisplayImperfect(!displayImperfect))}
                 />
                 <hr />
-                <h6 className="settings__add-langs-title">
+                <p className="settings__section-title">
                     {t('addDictionaryLanguages')}
                     {isLoading && (
                         <Spinner
@@ -192,7 +192,7 @@ export const Settings =
                             borderWidth="3px"
                         />
                     )}
-                </h6>
+                </p>
                 <div className={classNames('settings__add-langs', { 'settings__add-langs-loading': isLoading })}>
                     {ADD_LANGS.map((lang) => {
                         const checked = dictionaryLanguages.includes(lang)
@@ -230,7 +230,7 @@ export const Settings =
                 </div>
                 <hr />
                 <div>
-                    <h6>{t('devTools')}</h6>
+                    <p className="settings__section-title">{t('devTools')}</p>
                     <Checkbox
                         key="viewer"
                         title={t('viewerEnable')}

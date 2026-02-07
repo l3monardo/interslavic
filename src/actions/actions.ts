@@ -29,7 +29,7 @@ export enum ActionTypes {
     TOGGLE_THEME = 'TOGGLE_THEME',
 }
 
-export function langAction(data: {from: string, to: string}) {
+export function langAction(data: { from: string, to: string }) {
     return {
         type: ActionTypes.LANG,
         data,

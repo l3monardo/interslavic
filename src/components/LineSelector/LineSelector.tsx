@@ -20,14 +20,11 @@ export const LineSelector =
         const length = options.length
 
         return (
-            <div className={classNames('lineSelector', className)}>
-                <span
-                    className="slide"
-                    style={{
-                        width: `calc(100% / ${length})`,
-                        marginLeft: `calc(100% / ${length} * ${index})`,
-                    }}
-                />
+            <div
+                className={classNames('lineSelector', className)}
+                style={{ '--length': length, '--index': index } as React.CSSProperties}
+            >
+                <span className="slide" />
                 {options.map((item) => (
                     <span
                         key={item.name}

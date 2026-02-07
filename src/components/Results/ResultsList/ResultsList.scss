@@ -1,6 +1,8 @@
 .results-list {
   display: flex;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 100%;
   height: 100%;
   flex-direction: column;
   align-items: center;
@@ -9,7 +11,7 @@
 
   &__message-for-users {
     width: 100%;
-    max-width: 1024px;
+    max-width: 600px;
     box-sizing: border-box;
     padding: var(--gap-size);
     white-space: pre-line;
@@ -20,7 +22,7 @@
   }
 }
 
-@media (width <= 1024px) {
+@media (width <=1024px) {
   .results-list {
     padding-right: var(--gap-size) !important;
     padding-left: var(--gap-size) !important;

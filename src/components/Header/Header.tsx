@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 
 import { t } from 'translations'
 
-import { setPageAction } from 'actions'
+import { setPageAction, fromTextAction, runSearch } from 'actions'
 
 import {
     useBadges,
@@ -18,8 +18,12 @@ import './Header.scss'
 
 import LogoIcon from './images/logo-icon.svg'
 
+interface IHeaderProps {
+    isEmbed?: boolean
+}
+
 export const Header =
-    () => {
+    ({ isEmbed }: IHeaderProps) => {
         useInterfaceLang()
 
         const dispatch = useDispatch()
@@ -61,7 +65,7 @@ export const Header =
         useEffect(() => {
             onResize()
         }, [navRef, logoRef, enabledPages, onResize])
-        
+
         const filteredPages = useMemo(() => (
             pages.filter(({ value }) => (defaultPages.includes(value) || enabledPages.includes(value)))
         ), [pages, enabledPages])
@@ -70,9 +74,41 @@ export const Header =
             filteredPages.some(({ value }) => (badges.includes(value)))
         ), [badges, filteredPages])
 
+        if (isEmbed) {
+            return (
+                <header className={classNames('header', 'embed-mode')}>
+                    <div
+                        className="logo-img"
+                        onClick={() => {
+                            dispatch(fromTextAction(''))
+                            dispatch(runSearch())
+                            dispatch(setPageAction('dictionary'))
+                        }}
+                        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    >
+                        <LogoIcon style={{ width: 20, height: 20 }} />
+                    </div>
+                    <nav className="menu active always-visible">
+                        <MenuItem
+                            title="settingsTitle"
+                            value="settings"
+                            active={page === 'settings'}
+                            onClick={() => { }}
+                        />
+                        <MenuItem
+                            title="aboutTitle"
+                            value="about"
+                            active={page === 'about'}
+                            onClick={() => { }}
+                        />
+                    </nav>
+                </header>
+            )
+        }
+
         return (
             <header
-                className={classNames('header', 'color-theme--light', { active: menuIsVisible, mobile })}
+                className={classNames('header', { active: menuIsVisible, mobile })}
             >
                 <h1
                     className="logo"
@@ -81,15 +117,23 @@ export const Header =
                     <span
                         className="logo-img"
                         onClick={() => {
+                            dispatch(fromTextAction(''))
+                            dispatch(runSearch())
                             dispatch(setPageAction('dictionary'))
                             setMenuIsVisible(false)
                         }}
                     >
-                        <LogoIcon/>
+                        <LogoIcon />
                     </span>
-                    <span className="logo-text" data-testid="main-title">
-                        {t('mainTitle')}
-                    </span>
+                    <a
+                        href="https://interslavic.forum"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="logo-text"
+                        data-testid="main-title"
+                    >
+                        interslavic.forum
+                    </a>
                 </h1>
                 <button
                     type="button"
@@ -100,7 +144,7 @@ export const Header =
                         setMenuAnim(true)
                     }}
                 >
-                    <span className={classNames('lines', { active: menuIsVisible })}/>
+                    <span className={classNames('lines', { active: menuIsVisible })} />
                 </button>
                 <nav
                     className={classNames('menu', { active: menuIsVisible, anim: menuAnim })}

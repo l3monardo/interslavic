@@ -1,0 +1,122 @@
+diff --git a/node_modules/@interslavic/utils/dist/numeral/declensionNumeral.js b/node_modules/@interslavic/utils/dist/numeral/declensionNumeral.js
+index 3c9d443..ea7cecb 100644
+--- a/node_modules/@interslavic/utils/dist/numeral/declensionNumeral.js
++++ b/node_modules/@interslavic/utils/dist/numeral/declensionNumeral.js
+@@ -28,8 +28,8 @@ const exclusionList = {
+         ['masculine', 'feminine/neuter'],
+     ],
+     obadva: [
+-        'obadva|obadvě',
+-        'obadva / obadvoh|obadvě',
++        'obadva|obědvě',
++        'obadva / obadvoh|obědvě',
+         'obadvoh',
+         'obadvom',
+         'obadvoma',
+diff --git a/node_modules/@interslavic/utils/dist/pronoun/declensionPronoun.js b/node_modules/@interslavic/utils/dist/pronoun/declensionPronoun.js
+index 1b587ea..f6b79f4 100644
+--- a/node_modules/@interslavic/utils/dist/pronoun/declensionPronoun.js
++++ b/node_modules/@interslavic/utils/dist/pronoun/declensionPronoun.js
+@@ -33,15 +33,15 @@ function _getDeclensionPronounFlat(result) {
+         .split('/')
+         .filter(Boolean)
+         .reduce((acc, item) => {
+-        if (item.indexOf('(') !== -1 || item.indexOf(')') !== -1) {
+-            acc.push(item.replace(/[()]/g, ''));
+-            acc.push(item.replace(/\(.*\)/, ''));
+-        }
+-        else {
+-            acc.push(item);
+-        }
+-        return acc;
+-    }, []);
++            if (item.indexOf('(') !== -1 || item.indexOf(')') !== -1) {
++                acc.push(item.replace(/[()]/g, ''));
++                acc.push(item.replace(/\(.*\)/, ''));
++            }
++            else {
++                acc.push(item);
++            }
++            return acc;
++        }, []);
+     return Array.from(new Set(dirty));
+ }
+ exports._getDeclensionPronounFlat = _getDeclensionPronounFlat;
+@@ -236,6 +236,29 @@ function declensionPronoun(rawWord, pronounType) {
+             },
+         };
+     }
++    else if (pronounType === 'possessive' && (word === 'jejin' || word === 'jeji')) {
++        // Special case for irregular possessive pronoun "jejin" (her/hers)
++        // The stem changes from "jejin-" to "jej-" in most forms
++        return {
++            type: 'adjective',
++            casesSingular: {
++                nom: ['jejin', 'jejno', 'jejna'],
++                acc: ['jejnogo / jejin', 'jejno', 'jejnu'],
++                gen: ['jejnogo', 'jejnoj'],
++                loc: ['jejnom', 'jejnoj'],
++                dat: ['jejnomu', 'jejnoj'],
++                ins: ['jejnym', 'jejnojų'],
++            },
++            casesPlural: {
++                nom: ['jejni / jejne', 'jejne'],
++                acc: ['jejnyh / jejne', 'jejne'],
++                gen: ['jejnyh'],
++                loc: ['jejnyh'],
++                dat: ['jejnym'],
++                ins: ['jejnymi'],
++            },
++        };
++    }
+     else if ([
+         'demonstrative',
+         'indefinite',
+diff --git a/node_modules/@interslavic/utils/src/numeral/declensionNumeral.ts b/node_modules/@interslavic/utils/src/numeral/declensionNumeral.ts
+index 4f6cce0..dd550ce 100644
+--- a/node_modules/@interslavic/utils/src/numeral/declensionNumeral.ts
++++ b/node_modules/@interslavic/utils/src/numeral/declensionNumeral.ts
+@@ -34,8 +34,8 @@ const exclusionList = {
+     ['masculine', 'feminine/neuter'],
+   ],
+   obadva: [
+-    'obadva|obadvě',
+-    'obadva / obadvoh|obadvě',
++    'obadva|obědvě',
++    'obadva / obadvoh|obědvě',
+     'obadvoh',
+     'obadvom',
+     'obadvoma',
+diff --git a/node_modules/@interslavic/utils/src/pronoun/declensionPronoun.ts b/node_modules/@interslavic/utils/src/pronoun/declensionPronoun.ts
+index 1c2479e..2b7416c 100644
+--- a/node_modules/@interslavic/utils/src/pronoun/declensionPronoun.ts
++++ b/node_modules/@interslavic/utils/src/pronoun/declensionPronoun.ts
+@@ -241,6 +241,28 @@ export function declensionPronoun(
+         ins: ['(n)jimiže'],
+       },
+     };
++  } else if (pronounType === 'possessive' && (word === 'jejin' || word === 'jeji')) {
++    // Special case for irregular possessive pronoun "jejin" (her/hers)
++    // The stem changes from "jejin-" to "jej-" in most forms
++    return {
++      type: 'adjective',
++      casesSingular: {
++        nom: ['jejin', 'jejna', 'jejno'],
++        acc: ['jejnogo / jejin', 'jejnu', 'jejnogo / jejno'],
++        gen: ['jejnogo', 'jejnoj'],
++        loc: ['jejnom', 'jejnoj'],
++        dat: ['jejnomu', 'jejnoj'],
++        ins: ['jejnym', 'jejnoju'],
++      },
++      casesPlural: {
++        nom: ['jejni / jejne', 'jejne'],
++        acc: ['jejnyh / jejne', 'jene'],
++        gen: ['jejnyh'],
++        loc: ['jejnyh'],
++        dat: ['jejnym'],
++        ins: ['jejnymi'],
++      },
++    };
+   } else if (
+     [
+       'demonstrative',

@@ -84,12 +84,12 @@ export interface ITableData {
 
 export const tablesData: ITableData[] = [
     {
-        spreadsheetId: '1N79e_yVHDo-d026HljueuKJlAAdeELAiPzdFzdBuKbY',
+        spreadsheetId: '1cfSTT1h3GgFEjw3zclgTS5ZdbRScRatecElaoeaRLhs',
         sheetId: '1987833874',
         fields: basicFields,
     },
     {
-        spreadsheetId: '1N79e_yVHDo-d026HljueuKJlAAdeELAiPzdFzdBuKbY',
+        spreadsheetId: '1cfSTT1h3GgFEjw3zclgTS5ZdbRScRatecElaoeaRLhs',
         sheetId: '2005431854',
         fields: ADD_LANGS,
     },

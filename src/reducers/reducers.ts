@@ -413,7 +413,7 @@ export function mainReducer(state: IMainState, { type, data }) {
 
         case ActionTypes.CHANGE_CASE_QUESTIONS: {
             const caseQuestions = data
-            
+
             return {
                 ...state,
                 caseQuestions,
@@ -427,7 +427,7 @@ export function mainReducer(state: IMainState, { type, data }) {
                 ),
             }
         }
-        
+
         case ActionTypes.CHANGE_ORDER_OF_CASES:
             return {
                 ...state,
@@ -440,7 +440,7 @@ export function mainReducer(state: IMainState, { type, data }) {
                 displayImperfect: data,
             }
         }
-            
+
         case ActionTypes.TOGGLE_PAGE: {
             const { enabledPages } = state
 

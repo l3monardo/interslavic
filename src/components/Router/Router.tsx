@@ -43,31 +43,31 @@ function renderPageContent(page: string) {
         case 'grammar':
             return (
                 <Suspense fallback={<PageLoader />}>
-                    <Grammar/>
+                    <Grammar />
                 </Suspense>
             )
         case 'dictionary':
             return (
                 <Suspense fallback={<PageLoader />}>
-                    <DictionaryPage/>
+                    <DictionaryPage />
                 </Suspense>
             )
         case 'viewer':
             return (
                 <Suspense fallback={<PageLoader />}>
-                    <Viewer/>
+                    <Viewer />
                 </Suspense>
             )
         case 'settings':
             return (
                 <Suspense fallback={<PageLoader />}>
-                    <Settings/>
+                    <Settings />
                 </Suspense>
             )
         case 'about':
             return (
                 <Suspense fallback={<PageLoader />}>
-                    <About/>
+                    <About />
                 </Suspense>
             )
 
@@ -99,6 +99,17 @@ export const Router =
         useEffect(() => {
             window.onpopstate = onChangeUrl
         }, [onChangeUrl])
+
+        useEffect(() => {
+            let timeout: NodeJS.Timeout;
+            if (page !== prevPage) {
+                // Fallback: if transition doesn't end within 400ms, force update
+                timeout = setTimeout(() => {
+                    setPrevPage(page);
+                }, 400);
+            }
+            return () => clearTimeout(timeout);
+        }, [page, prevPage]);
 
         useEffect(() => {
             if (typeof document !== 'undefined') {

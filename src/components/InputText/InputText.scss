@@ -1,16 +1,13 @@
 .input-text {
   position: relative;
 
-  &-size-m {
+  &-size-m {}
 
-  }
-
-  &-size-l {
-
-  }
+  &-size-l {}
 
   &__input {
     width: 100%;
+    box-sizing: border-box;
     padding: 8px 16px;
     border: var(--border);
     border-radius: var(--border-radius-s);
@@ -32,7 +29,7 @@
     &::-webkit-search-cancel-button,
     &::-webkit-search-results-button,
     &::-webkit-search-results-decoration {
-      appearance:none;
+      appearance: none;
     }
   }
 

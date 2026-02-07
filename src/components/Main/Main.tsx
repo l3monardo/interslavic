@@ -24,7 +24,7 @@ export const Main =
         const theme = useColorTheme()
 
         useLayoutEffect(() => {
-            document.getElementById('app').className = `color-theme--${theme}`
+            document.body.className = `color-theme--${theme}`
         }, [theme])
 
         useEffect(() => {
@@ -34,13 +34,33 @@ export const Main =
             })
         }, [dictionaryLanguages])
 
+        const isEmbed = new URLSearchParams(window.location.search).get('mode') === 'embed'
+
+        useEffect(() => {
+            if (isEmbed) {
+                const observer = new ResizeObserver((entries) => {
+                    for (const entry of entries) {
+                        const height = entry.target.scrollHeight;
+                        window.parent.postMessage({ type: 'interslavic-dictionary-height', height }, '*');
+                    }
+                });
+
+                const appElement = document.getElementById('app');
+                if (appElement) {
+                    observer.observe(appElement);
+                }
+
+                return () => observer.disconnect();
+            }
+        }, [isEmbed]);
+
         return (
             <>
-                <Header/>
-                <Router/>
-                <Loader/>
-                <ModalDialog/>
-                <Notification/>
+                <Header isEmbed={isEmbed} />
+                <Router />
+                <Loader />
+                <ModalDialog />
+                <Notification />
             </>
         )
     }

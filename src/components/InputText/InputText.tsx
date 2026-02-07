@@ -9,13 +9,13 @@ interface IInputTextProps {
     placeholder?: string;
     testId?: string;
 
-    [x:string]: any;
+    [x: string]: any;
 }
 
-export const InputText = ({ value, size = 'M', onChange, placeholder, testId, ...otherProps }: IInputTextProps) => {
+export const InputText = ({ value, size = 'M', onChange, placeholder, testId, className, ...otherProps }: IInputTextProps) => {
     return (
         <div
-            className={classNames(['input-text', `input-text-${size.toLowerCase()}`])}
+            className={classNames('input-text', `input-text-${size.toLowerCase()}`, className)}
         >
             <input
                 data-testid={testId}
