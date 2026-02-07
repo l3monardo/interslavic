@@ -1,0 +1,114 @@
+.compare-search {
+    position: relative;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+
+    &__controls {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+
+    &__input {
+        .input-text__input {
+            padding: 4px 8px;
+            font-size: 11px;
+            line-height: 18px;
+            height: auto;
+            box-sizing: border-box;
+            width: 100%;
+            background: transparent;
+        }
+    }
+
+    &__langs {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        justify-content: center;
+    }
+
+    &__selector {
+        flex: 1;
+        min-width: 0;
+
+        .selector__value {
+            font-size: 10px;
+            padding: 2px 4px;
+            height: auto;
+            text-align: center;
+        }
+
+        .selector__label {
+            display: none;
+        }
+    }
+
+    &__swap {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 14px;
+        color: var(--muted-text-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            color: var(--primary-color);
+        }
+    }
+
+    &__suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: var(--light);
+        border: 1px solid var(--gray-d);
+        border-top: none;
+        border-radius: 0 0 var(--border-radius-m) var(--border-radius-m);
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: var(--shadow);
+    }
+
+    &__item {
+        padding: 6px 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        border-bottom: 1px solid var(--gray-e);
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: var(--primary-color);
+            color: var(--primary-color-fg);
+
+            .compare-search__translate {
+                color: var(--primary-color-fg);
+            }
+        }
+    }
+
+    &__word {
+        font-weight: 600;
+    }
+
+    &__translate {
+        color: var(--muted-text-color);
+        font-style: italic;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
