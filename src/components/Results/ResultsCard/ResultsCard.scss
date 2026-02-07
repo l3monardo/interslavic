@@ -322,6 +322,22 @@
       margin-top: 12px;
       box-sizing: border-box;
     }
+
+    .result-details-column {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      margin: 0 0 12px 0 !important;
+      padding: 8px 4px !important;
+      box-sizing: border-box !important;
+
+      .table {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        overflow-x: auto !important;
+      }
+    }
   }
 
   @media (max-width: 620px) {
