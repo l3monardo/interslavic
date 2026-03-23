@@ -1,0 +1,1 @@
+{"version":3,"file":"isScrollBarVisible.js","sourceRoot":"","sources":["isScrollBarVisible.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,MAAM,kBAAkB,GAAG,CAAC,GAAmB,EAAE,EAAE,CAAC,OAAO,CAC9D,GAAG;IACH,GAAG,CAAC,OAAO;IACX,GAAG,CAAC,OAAO,CAAC,YAAY,GAAG,GAAG,CAAC,OAAO,CAAC,SAAS,KAAK,GAAG,CAAC,OAAO,CAAC,YAAY,CAChF,CAAA"}

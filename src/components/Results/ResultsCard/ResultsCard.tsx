@@ -34,6 +34,14 @@ export const ResultsCard =
             setActiveTab(prev => prev === tab ? 'none' : tab);
         };
 
+        const isCollectiveOverride = (() => {
+            const base = item.isv.split(',')[0].trim();
+            return (base === 'oba' || base === 'obadva' || base === 'obydva') && /num\.\s*card\./.test(item.details);
+        })();
+        const details = isCollectiveOverride
+            ? item.details.replace(/num\.\s*card\./g, 'num.coll.')
+            : item.details;
+
         return (
             <div
                 className={cn('results-card', { short, expanded: activeTab !== 'none', comparing: isComparing })}
@@ -54,11 +62,11 @@ export const ResultsCard =
                         )}
                         <ResultsCardWordStatus item={item} />
                         {item.to === 'isv' && short && (
-                            <ResultsCardPos details={item.details} />
+                            <ResultsCardPos details={details} />
                         )}
                     </div>
                     {!short && (
-                        <ResultsCardPos details={item.details} />
+                        <ResultsCardPos details={details} />
                     )}
                     <div className="results-card__bottom">
                         <div className="results-card__text original">
@@ -73,7 +81,7 @@ export const ResultsCard =
                                 />
                             )}
                             {item.to !== 'isv' && short && (
-                                <ResultsCardPos details={item.details} />
+                                <ResultsCardPos details={details} />
                             )}
                         </div>
                         <ResultsCardActions

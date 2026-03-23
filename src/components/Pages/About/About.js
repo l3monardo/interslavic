@@ -1,0 +1,21 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect, useState } from 'react';
+import { REP_LINK, tablesData } from 'consts';
+import { t } from 'translations';
+import { getTablePublicUrl } from 'utils';
+import { Link } from 'components';
+import './About.scss';
+export const About = () => {
+    const [isCom, setIsCom] = useState(false);
+    const worksheetUrl = getTablePublicUrl(tablesData[0].spreadsheetId, tablesData[0].sheetId);
+    const email = 'cherebedov.sergey@gmail.com';
+    const source = 'http://steen.free.fr/interslavic';
+    const version = [__VERSION__, __PR_NUMBER__].filter((item) => item && item.length).join('-');
+    useEffect(() => {
+        fetch('is-com.json')
+            .then((res) => res.json())
+            .then((data) => setIsCom(data?.isCom));
+    }, []);
+    return (_jsx("div", { className: "about-page", children: _jsxs("div", { className: "about-page__container", children: [_jsx("h4", { children: t('aboutSmallTitle') }), _jsxs("div", { className: "about-page__common", children: [_jsx("p", { children: t('aboutInterslavic') }), _jsxs("p", { children: [t('isoCodeText'), "\u00A0", _jsx(Link, { title: "ISO 639-3 [isv]", href: "https://iso639-3.sil.org/code/isv/", external: true, children: "isv (ISO 639-3)" })] }), t('aboutUsingFrom'), " ", _jsx(Link, { external: true, href: source, children: source }), _jsx("hr", {}), _jsx("p", { children: t('aboutJoinText') }), _jsx(Link, { external: true, href: worksheetUrl, children: t('aboutTranslationsTable') }), _jsx("hr", {}), _jsx("i", { children: t('nonCommercialDisclaimer') }), _jsx("hr", {}), _jsx("h6", { children: t('aboutDeveloper') }), _jsxs("div", { className: "about-page__author", children: [t('aboutAuthorSergeyCherebedov'), ":", _jsx(Link, { external: true, href: "https://github.com/sonic16x", children: "GitHub" }), isCom && (_jsx(Link, { external: true, href: "https://www.linkedin.com/in/scherebedov/", children: "LinkedIn" })), isCom && (_jsx(Link, { href: "https://www.facebook.com/profile.php?id=100009366550621", external: true, children: "Facebook" })), _jsx(Link, { external: true, href: `email:${email}`, children: email })] }), _jsx("h6", { children: t('aboutDeveloperCoauthors') }), _jsxs("div", { className: "about-page__author", children: [t('aboutAuthorDenisShabalin'), ":", _jsx(Link, { external: true, href: "https://github.com/ru-danko", children: "GitHub" }), isCom && (_jsx(Link, { href: "https://www.facebook.com/d.y.shabalin", external: true, children: "Facebook" }))] }), _jsxs("div", { className: "about-page__author", children: [t('aboutAuthorJaroslavSerhieiev'), ":", _jsx(Link, { external: true, href: "https://github.com/noomorph", children: "GitHub" }), _jsx(Link, { external: true, href: "email:noomorph@gmail.com", children: "noomorph@gmail.com" })] }), _jsx("h6", { children: t('aboutTranslators') }), _jsx("div", { className: "about-page__author", children: t('aboutTranslatorsText') }), _jsx("hr", {}), t('aboutSourceCode'), " ", _jsx(Link, { external: true, href: REP_LINK, children: REP_LINK }), _jsx("hr", {}), _jsx("h6", { children: t('aboutOurFriends') }), _jsxs("div", { className: "about-page__community-links", children: [isCom && (_jsx(Link, { title: "Interslavic Facebook", href: "https://www.facebook.com/groups/interslavic", external: true, children: "Facebook community" })), isCom && (_jsx(Link, { title: "Interslavic Discord", href: "https://discord.com/invite/n3saqm27QW", external: true, children: "Discord server" })), _jsx(Link, { title: "Interslavic Language Portal", href: "https://interslavic-language.org/", external: true, children: "interslavic-language.org" }), _jsx(Link, { title: "Interslavic journal", href: "https://slovjani.info/", external: true, children: "slovjani.info" }), _jsx(Link, { title: "interslavic.fun", href: "https://interslavic.fun/", external: true, children: "interslavic.fun" })] }), _jsx("hr", {})] }), _jsxs("div", { className: "about-page__release-date", children: [_jsxs("p", { children: ["v", version] }), _jsx("p", { children: __DICTIONARY_UPDATE_TIME })] })] }) }));
+};
+//# sourceMappingURL=About.js.map

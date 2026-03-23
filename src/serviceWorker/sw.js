@@ -1,0 +1,44 @@
+const updateCache = () => (fetch('/cacheList.json')
+    .then((response) => response.json()) // Парсим JSON
+    .then((urls) => (caches.open(__VERSION__).then((cache) => (cache.addAll(urls))))));
+self.addEventListener('install', (event) => {
+    event.waitUntil(updateCache());
+});
+self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+    if (event.request.method !== 'GET' || url.protocol === 'chrome-extension:') {
+        return;
+    }
+    if (url.pathname === '/is_com.js' ||
+        url.pathname === '/is-com.json' ||
+        url.pathname.startsWith('/api') ||
+        url.hostname === 'docs.google.com') {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+    // Try to find data in cache
+    event.respondWith(caches
+        .match(event.request)
+        .then((cache) => {
+        // Request data from network
+        const network = fetch(event.request)
+            .then((response) => (caches
+            .open(__VERSION__)
+            .then((cache) => cache.put(event.request, response.clone())) // Update cache
+            .then(() => response)));
+        // Prefer get data from cache here
+        return cache || network;
+    }));
+    // Update cache in background
+    event.waitUntil(caches
+        .open(__VERSION__)
+        .then((cache) => (fetch(event.request).then((response) => cache.put(event.request, response.clone())))));
+});
+self.addEventListener('activate', (event) => {
+    event.waitUntil(caches.keys()
+        .then((keys) => Promise.all(keys
+        .filter((key) => key !== __VERSION__)
+        .map((key) => caches.delete(key))))
+        .then(() => updateCache()));
+});
+//# sourceMappingURL=sw.js.map

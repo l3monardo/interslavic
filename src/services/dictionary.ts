@@ -78,7 +78,11 @@ const isvReplacebleLetters = [
 function getWordForms(item): string[] {
     const word = removeExclamationMark(Dictionary.getField(item, 'isv'))
     const add = Dictionary.getField(item, 'addition')
-    const details = Dictionary.getField(item, 'partOfSpeech')
+    let details = Dictionary.getField(item, 'partOfSpeech')
+    const isObaOrVar = /^(oba|obadva|obydva)([\s,\()]|$)/.test(word)
+    if (/num\.\s*card\./.test(details) && isObaOrVar) {
+        details = details.replace(/num\.\s*card\./g, 'num.coll.')
+    }
     const pos = getPartOfSpeech(details)
     const wordForms = []
 
@@ -619,12 +623,18 @@ class DictionaryClass {
                 caseInfo = getCaseTips(caseInfo.slice(1), 'nounShort')
             }
             const translate = this.getField(item, (from === ISV ? to : from))
+            let details = this.getField(item, 'partOfSpeech')
+            const isObaOrVar = /^(oba|obadva|obydva)([\s,\()]|$)/.test(isv)
+            if (/num\.\s*card\./.test(details) && isObaOrVar) {
+                details = details.replace(/num\.\s*card\./g, 'num.coll.')
+            }
+
             const formattedItem: ITranslateResult = {
                 translate: removeExclamationMark(translate),
                 original: getLatin(isv, flavorisationType),
                 add: getLatin(add, flavorisationType),
                 caseInfo: caseInfo,
-                details: this.getField(item, 'partOfSpeech'),
+                details: details,
                 ipa: latinToIpa(getLatin(removeBrackets(isv, '[', ']'), flavorisationType)),
                 checked: translate[0] !== '!',
                 type: Number(this.getField(item, 'type') || '2'),

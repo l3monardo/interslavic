@@ -1034,6 +1034,21 @@
     "mk": "среден род",
     "bg": "сред. род"
   },
+  "masculine/neuter": {
+    "en": "masculine/neuter",
+    "isv": "muž./srěd. rod",
+    "ru": "муж./сред. род",
+    "uk": "чол./сер. рід",
+    "be": "муж./ніякі род",
+    "pl": "rodzaj męski/nijaki",
+    "cs": "muž./stř. rod",
+    "sk": "muž./str. rod",
+    "sl": "moški/sred. spol",
+    "hr": "muški/sred. rod",
+    "sr": "мушки/сред. род",
+    "mk": "машки/среден род",
+    "bg": "мъж./сред. род"
+  },
   "feminineOrNeuter": {
     "en": "feminine/neuter",
     "isv": "žen./srěd. rod",
@@ -1047,6 +1062,21 @@
     "hr": "žen./sred. rod",
     "sr": "жен./сред. род",
     "mk": "жен./сред. род",
+    "bg": "жен./сред. род"
+  },
+  "feminine/neuter": {
+    "en": "feminine/neuter",
+    "isv": "žen./srěd. rod",
+    "ru": "жен./сред. род",
+    "uk": "жін./сер. рід",
+    "be": "жан./ніякі род",
+    "pl": "rodzaj żeński/nijaki",
+    "cs": "žen./stř. rod",
+    "sk": "žen./str. rod",
+    "sl": "žen./sred. spol",
+    "hr": "žen./sred. rod",
+    "sr": "жен./сред. род",
+    "mk": "жен./среден род",
     "bg": "жен./сред. род"
   },
   "noun-masculine": {

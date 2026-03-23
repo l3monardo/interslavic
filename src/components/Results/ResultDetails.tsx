@@ -227,7 +227,12 @@ const ResultForms: React.FC<{
     onSetAlphabet: (type: string) => void;
     isComparison?: boolean;
 }> = React.memo(({ item, alphabetType, flavorisationType, orderOfCases, displayImperfect, onSetAlphabet, isComparison }) => {
-    const details = item.details;
+    const COLLECTIVE_OVERRIDES = new Set(['oba', 'obadva', 'obydva']);
+    const rawDetails = item.details;
+    const baseIsv = item.isv.split(',')[0].trim();
+    const details = COLLECTIVE_OVERRIDES.has(baseIsv) && /num\.\s*card\./.test(rawDetails)
+        ? rawDetails.replace(/num\.\s*card\./g, 'num.coll.')
+        : rawDetails;
     const word = item.isv;
     const add = Dictionary.getField(item.raw, 'addition');
 
@@ -371,8 +376,13 @@ const ResultForms: React.FC<{
         );
     };
 
+    const COLLECTIVE_NUMERALS = new Set(['oba', 'obadva', 'obydva']);
     const renderNumeral = (word, details) => {
-        const paradigm = declensionNumeral(word, getNumeralType(details));
+        const baseWord = word.trim().split(/[\s,(]/)[0];
+        const numeralType = COLLECTIVE_NUMERALS.has(baseWord) ? 'collective' : getNumeralType(details);
+        console.log('[renderNumeral] word:', word, 'baseWord:', baseWord, 'numeralType:', numeralType);
+        const paradigm = declensionNumeral(word, numeralType);
+        console.log('[renderNumeral] paradigm:', paradigm);
         if (!paradigm) return null;
         if (paradigm.type === 'noun') return <Table data={getSimpleCasesTable(paradigm)} />;
         return (

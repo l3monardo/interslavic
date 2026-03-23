@@ -1,0 +1,119 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { createRef, PureComponent } from 'react';
+import { getCaseTips } from 'utils';
+import { Card, Link, Text } from 'components';
+import { Table } from 'components/Table';
+import './Grammar.scss';
+import tables from './tables.json';
+const titles = {
+    abeceda: 'Abeceda',
+    imeniky: 'Imenniky',
+    zaimeniky: 'Zaimenniky',
+    pridavniky: 'Pridavniky',
+    glagoly: 'Glagoly',
+    byti: 'Neredne glagoly',
+    prislovniky: 'Prislovniky',
+    predlogy: 'Prědlogy',
+    ciselniky: 'Čislovniky',
+    sovezniky: 'Svezniky',
+    cestice: 'Čestice',
+    medzuslovniky: 'Medžuslovniky',
+    podredne: 'Podredne izrěčenja',
+    // naucno: 'Naučno pravopisanje i kirilica',
+    glagolica: 'Glagolica',
+    primetky: 'Primětky (*)',
+    podrobnosti: 'Podrobne pravila (linky)',
+};
+/* eslint-disable max-len */
+export class Grammar extends PureComponent {
+    containerRef;
+    activeId;
+    userEvent;
+    constructor(props) {
+        super(props);
+        this.activeId = 'abeceda';
+        this.containerRef = createRef();
+        this.onScroll = this.onScroll.bind(this);
+        this.onWheel = this.onWheel.bind(this);
+    }
+    addCaseTips = (type) => (row) => {
+        const elemArr = row[0].split('@');
+        if (['N', 'A', 'G', 'L', 'I', 'D', 'V'].includes(elemArr[0]))
+            elemArr[2] = getCaseTips(elemArr[0], type);
+        row[0] = elemArr.join('@');
+        return row;
+    };
+    render() {
+        return (_jsx("div", { className: "grammar-container color-theme--light", onWheel: this.onWheel, onScroll: this.onScroll, ref: this.containerRef, lang: "isv", children: _jsxs("div", { className: "grammar", children: [_jsx("h4", { className: "grammar__title", children: "Osnovna gramatika med\u017Euslovjanskogo jezyka" }), _jsx("br", {}), _jsx(Card, { title: "Sodr\u017Eanje", id: "content", className: "grammar__content", children: Object.keys(titles).map((id) => (_jsx(Link, { className: "list-group-item link", id: this.getLinkId(id), onClick: () => this.userEvent = false, href: `#${id}`, children: titles[id] }, id))) }), _jsxs(Card, { title: titles.abeceda, id: "abeceda", children: [_jsx(Table, { data: tables.tableAbeceda }), _jsx(Text, { children: `V latinici i kirilici jest možno vměsto {y}[b,B] pisati prosto {i}[b,B] i vměsto {ě}[g,B] pisati prosto {e}[g,B].
+                                {Napriměr:}[i] {r{y}[b]ba→r{i}[b]ba}[B], {r{ě}[g]ka→r{e}[g]ka}[B]` }), _jsx(Text, { children: `Palatalizacija i evfonija: {{k}[k]→{č}[k], {h}[k]→{š}[k], {g}[k]→{ž}[k], {c}[k]{j}[p]→{č}[k], {s}[k]{j}[p]→{š}[k], {zj}[k]→{ž}[k]}[B]
+                                {Napriměr:}[i] {Gre{k}[k]→gre{č}[k]sky}[B], {pra{h}[k]→pra{š}[k]ny}[B], {Bo{g}[k]→bo{ž}[k]sky}[B], {pro{s}[k]{iti}[p]→pro{š}[k]{u}[p]}[B]` }), _jsx(Text, { indent: "0.5rem", children: '{1.}[B,m] Staroslovjanska bukva {ѣ}[k,B] ({ě}[g,B]/{є}[g,B]) se može pisati bez diakritiky kako {ie}[g,B] ili prosto {e}[g,B]. Podobno {č}[k,B], {š}[k,B], {ž}[k,B] se mogut pisati kako {cz}[k,B], {sz}[k,B], {zs}[k,B].' }), _jsx(Text, { indent: "0.5rem", children: '{2.}[B,m] Staroslovjanska bukva {щ}[k,B] jest na početkah slov kako {šč}[k,B], ale potom kako {č}[k,B] ({Napriměr:}[i] {ščit}[k,B], {pomoč}[k,B], {občina}[k,B], {svěča}[k,B])' }), _jsx(Text, { indent: "0.5rem", children: '{3.}[B,m] V kirilici možno koristiti ligatury: {шч}[k,B] → {щ}[k,B], {ју}[k,B] → {ю}[k,B], {ја}[k,B] → {я}[k,B]' }), _jsx(Text, { children: 'Medžuslovjansky jezyk drži morfologično pravopisanje. Koren slov se piše ravno v vsih padežah. Anglijske, latinske i grečske slova imajut svoje originalno pravopisanje ale s medžuslovjanskymi zakončenjami ({arhitektur}[k,B]{a}[k], {biolog}[k,B]{ija}[k] ...).' })] }), _jsxs(Card, { title: titles.imeniky, id: "imeniky", children: [_jsx(Table, { data: tables.tableBrat.map(this.addCaseTips('noun')) }), _jsx(Table, { data: tables.tableMuz.map(this.addCaseTips('noun')) }), _jsx(Text, { children: 'Mužske objekty, ktore aktivno dělajut někaky proces, sut {žive}[i] (od pytanja KTO?) i po tutoj pričině imajut akuzativ ravny s genitivom.' }), _jsx(Text, { children: `Ostale objekty sut {nežive}[i] (od pytanja ČTO) i imajut v jednině akuzativ ravny s nominativom.
+                            {Napriměr:}[i]
+                               - {gospod peče {hlěb}[k].}[B] ({hlěb}[k,B] ne može pekti sebe = jest neživy)
+                               - {gospod vidi {člověka}[k]}[B]. ({člověk}[k,B] može viděti = jest živy)` }), _jsx(Text, { children: `Slova mužskogo roda zakončeni na -{a}[r,B] imajut v jednině klonjenje po tvrdom vzoru {žena}[k,B] ili mekkom vzoru {duša}[k,B], ale v množině i dvojině imajut normalny mužsky vzor.
+                             {Napriměr:}[i]
+                               - {vladyk-{a}[r], vladyk-{y}[b], vladyk-{ě}[g,B], vladyk-{u}[p], vladyk-{o}[p],}[B] ... (jednina)
+                               - {vladyk-{i}[b], vladyk-{ov}[p], vladyk-{a}[r]m, vladyk-{a}[r]m{i}[b],}[B] ... (množina)` }), _jsx(Table, { data: tables.tableZena.map(this.addCaseTips('noun')) }), _jsx(Table, { data: tables.tableKost.map(this.addCaseTips('noun')) }), _jsx(Text, { children: 'Vse čislovniky zakončene na soglasky –{T}[B] i –{Č}[B] ({PET}[B], {ŠEST}[B], ... {DESET}[B], {TRINADSET}[B], ... {DVADESET}[B], {TYSEČ}[B]) imajut klonjenje kako {KOST}[B] v jednině: {šest, šest-{i}[b], šest-j{u}[p]}[B] ...' }), _jsx(Text, { children: 'Dvojinne slova {OKO}[B], {UHO}[B] imajut dvojinu ravnu s množinoju vzora {KOST}[B] s palatalizovanym korenem: {oč-{i}[b], oč-{ij}[b], oč-{a}[r]m}[B] ... {uš-{i}[b], uš-{i}[b]j, uš-{a}[r]m}[B] ... kde {čj,šj,žj → č,š,ž}[B].' }), _jsx(Table, { data: tables.tableSelo.map(this.addCaseTips('noun')) }), _jsx(Table, { data: tables.tableDen.map(this.addCaseTips('noun')) }), _jsx(Text, { children: `Na različenje od staroslovjanskogo jezyka, specijalne vzory imajut svoje klonjenje toliko v jednině. Množina i dual jest v normalnyh mekkyh vzorah:
+                            - {dn-{i}[b]=kost-{i}[b], imen-{a}[r]=polj-{a}[r], mater-{e}[g]=duš-{e}[g], dět-{i}[b]=kost-{i}[b]}[B], ...` }), _jsx(Text, { children: `Medžuslovjansky jezyk koristi nestale {[{e}[g]/·] i [{o}[p]/·]}[B]:
+                            - {ot{e}[g]c - od·ca, Decemb{e}[g]r - Decemb·ra, član{o}[p]k - član·ka, p{e}[g]s - p·sa}[B] ...` })] }), _jsxs(Card, { title: titles.zaimeniky, id: "zaimeniky", children: [_jsx(Table, { data: tables.tableMest.map(this.addCaseTips('noun')) }), _jsx(Table, { data: tables.tableTojTaTo.map(this.addCaseTips('adjective')) }), _jsx(Table, { data: tables.tableOnOnaOno.map(this.addCaseTips('noun')) }), _jsx(Text, { children: `Mekky	vzor klonjenja {(-{e}[g]g{o}[p], -{e}[g]m{u}[p], ...)}[B] imajut zaimenniky:
+                            - {MOJ-MOJA-MOJE, TVOJ-TVOJA-TVOJE, NAŠ-NAŠA-NAŠE, VAŠ-VAŠA-VAŠE, VSEj-VSA-VSE, KOJ, KOJA, KOJE, ČIJ, ČIJA, ČIJE ...}[B]` }), _jsx(Text, { children: `Tvar {n}[k,B]- pišemo toliko v padežah s prědlogom:
+                            - {slyšu j{e}[g]go, rabotaju za {n}[k]j{e}[g]go, idu s {n}[k]j{i}[b]m{i}[b], pišu j{e}[g]m{u}[p], idu k {n}[k]j{e}[g]m{u}[p]}[B]` })] }), _jsxs(Card, { title: titles.pridavniky, id: "pridavniky", children: [_jsx(Table, { data: tables.tableDobry.map(this.addCaseTips('adjective')) }), _jsx(Table, { data: tables.tableSvezi.map(this.addCaseTips('adjective')) }), _jsx("br", {}), _jsx(Table, { data: tables.tableGradacija }), _jsx(Text, { children: '{skračenje: tvrd-{ěj}[s]-ši→tvrd-ši krat-{čej}[s]-ši→krat-ši bogat-{ěj}[s]-ši→bogat-ši}[B]' })] }), _jsxs(Card, { title: titles.glagoly, id: "glagoly", children: [_jsx(Table, { data: tables.tableImeti }), _jsx(Text, { children: `Pasivny prošly particip tvrdyh glagolov {–{i}[b]ti –{e}[g]ti –{u}[p]ti –yti}[B] jest {–{i}[b]ty –{e}[g]ty –{u}[p]ty –{y}[b]ty:}[B]
+                            {piti→pity, kleti→klety, obuti→obuty, kryti→kryty}[B] ...	vse	druge imajut {–▪ny}[B].` }), _jsx(Table, { data: tables.tableVariti }), _jsx(Text, { children: `Pasivny	prošly	particip	mekkyh	glagolov jest {–j{e}[g]ni –j{e}[g]na –j{e}[g]no}[B],
+                            ale {dj→dž (viděti, vidžu, vidiš, vidženy),
+                            tj→č (vratiti, vraču, vratiš, vračeny)
+                            sj→š (prositi, prošu, prosiš, prošeny),
+                            stj→šč (koristiti, korišču, koristiš, koriščeny)}[B]` }), _jsx(Text, { children: `Pasivny prošly particip	vsih ostalyh glagolov {–{a}[r]ti –{ě}[g]ti –▪ti jest –{a}[r]ny –{ě}[g]ny –{e}[g]ny:
+                            dělati→dělany, pekti→pek–eny→pečeny ...}[B]` }), _jsx(Table, { data: tables.tableVremena }), _jsx(Text, { children: `Aktivne glagolne participy mogut tvoriti aktivny nastoječi i aktivny prošly prislovniky:
+                            {dělati → {dělaj}[k]-{u}[p]-č, děl-{a}[r]-v
+                             variti → var-{e}[g]-č, var-{i}[b]-v}[B]` })] }), _jsxs(Card, { title: titles.byti, id: "byti", children: [_jsx(Table, { data: tables.tableByti }), _jsx("br", {}), _jsx(Text, { children: '{Neredne glagoly VĚDĚTI, DATI, IDTI, JESTI}[k,B]' }), _jsx(Text, { children: `{věděti}[B], věděnje – věm, věš, vě, věmo, věte, vědut ... věděl, věděh ... vědi!, vědite!
+                            {dati}[B], danje – dam, daš, da, damo, date, dadut ... dal, dah ... daj! dajte!
+                            {idti}[B], idenje – idu, ideš, ide, idemo, idete, idut ... išel, ideh ... idi!, idite!
+                            {jesti}[B], jedenje – jedu, jedeš, jede, jedemo, jedete, jedut ... jedl, jedeh ... jedi!, jedite!
+                             {({krasti}[B], kradenje – kradu, kradeš, krade, krademo ... kradl, kradeh ... kradi!, ...)}[s]` })] }), _jsxs(Card, { title: titles.prislovniky, id: "prislovniky", children: [_jsx(Text, { children: `Poslě tvrdyh soglasok jest zakončenje {-{o}[p]}[B], poslě mekkyh {č š ž j}[B,k] jest {-{e}[g]}[B].
+                            {Napriměr:}[i] {dobr-{o}[p]}[B], {bystr-{o}[p]}[B], {už-{e}[g]}[B], {daž-{e}[g]}[B], {menš-{e}[g]}[B]` }), _jsx(Text, { children: `Prislovniky iz pridavnikov zakončenyh na {-sk{y}[b]}[B] imajut zakončenje {-sk{y}[b]}[B].
+                            {Napriměr:}[i] pridavnik {poljsk{y}[b],{a}[r],{o}[p]}[B] → prislovnik {poljsk{y}[b]}[B]` }), _jsx(Table, { data: tables.tableGradacija2 })] }), _jsx(Card, { title: titles.predlogy, id: "predlogy", children: _jsx(Table, { data: tables.tablePredlogy }) }), _jsxs(Card, { title: titles.ciselniky, id: "ciselniky", children: [_jsx(Table, { data: tables.tableNumbers }), _jsx(Text, { children: `{25 746}[B] = dvadeset pet	tyseč sedmsto četyrideset šest.
+                            {25 746}[B] = dvadeset pet tyseč sedmsto četyrideset šesty.` }), _jsx(Text, { children: `{{dva, dvoh, dvom, dvoma}[r]
+                            {tri, trěh, trěm, trěmi}[k]
+                            {četyri, četyrěh, četyrěm, četyrěmi}[k]
+                            jedin, jednogo (TOJ)
+                            {pet, peti... 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 (KOST)}[g]
+                            {nula, nuly (ŽENA)}[p]
+                            {sto, sta (SELO)}[b]
+                            {tyseč, tyseči (KOST)}[g]
+                            milion, miliona (GRAD)}[B]` })] }), _jsx(Card, { title: titles.sovezniky, id: "sovezniky", children: _jsx(Table, { data: tables.tableSovezniky }) }), _jsx(Card, { title: titles.cestice, id: "cestice", children: _jsx(Table, { data: tables.tableCestice }) }), _jsx(Card, { title: titles.medzuslovniky, id: "medzuslovniky", children: _jsx(Text, { children: `{oh! ah! uva! lutě!}[B]
+                            «značenje medžuslovnika takože imajut vse izrěčenja v navodnicah»` }) }), _jsx(Card, { title: titles.podredne, id: "podredne", children: _jsx(Text, { children: `{..., kde ... ..., ktoromu..., tako ..., kako ... toliko ..., koliko ... ..., že ...}[B]
+                            tvary {iže, jegože, jimže}[B], ... sut relativne zaimenniky od on, ona, ono ` }) }), _jsx(Card, { title: titles.glagolica, id: "glagolica", children: _jsx(Table, { data: tables.tableGlagoljica }) }), _jsxs(Card, { title: titles.primetky, id: "primetky", children: [_jsx(Text, { children: '1. Dvojina je shranila se nyně jedino v slovenskom i lužičskyh jezykah, tomu vměsto tutoj formy jest rekomendovano koristati množinu.' }), _jsx(Text, { children: '2. Prosto prošlo vrěme (aorist, imperfect) je shranilo se jedino v česti slovjanskyh jezykov, tomu vměsto njego jest rekomendovano koristati glagol byti + l-particip (pisah → jesm pisal).' })] }), _jsx(Card, { title: titles.podrobnosti, id: "podrobnosti", children: _jsxs("div", { className: "text-start", children: [_jsxs("p", { children: ["Pri stvorjenju tutoj stranice jest upotr\u011Bbjeny dokument \u00ABMed\u017Euslovjansky jezyk. Abeceda i pravopisanie\u00BB (Januar 2018):\u00A0", _jsx(Link, { external: true, href: "https://interslavic-language.org/doc/ns-pregled.pdf", className: "inline", children: "[PDF]" })] }), _jsxs("p", { children: ["Podrobne pravila pravopisanja je mo\u017Eno najdti na oficialnyh sajtah:\u00A0", _jsx(Link, { external: true, href: "http://steen.free.fr/interslavic/grammar.html", className: "inline", children: "steen.free.fr/interslavic/grammar.html" })] })] }) })] }) }));
+    }
+    onWheel() {
+        this.userEvent = true;
+    }
+    onScroll() {
+        const scrollPosition = this.containerRef.current.scrollTop;
+        let activeId;
+        let minDistance = Number.MAX_SAFE_INTEGER;
+        const diff = this.containerRef.current.offsetTop + 100;
+        const distance = {};
+        const titleElements = Object.keys(titles).map((id) => document.getElementById(id));
+        titleElements.forEach((item) => {
+            const id = item.getAttribute('id');
+            distance[id] = Math.abs((item.offsetTop - diff) - scrollPosition);
+        });
+        for (const id in distance) {
+            if (distance[id] < minDistance) {
+                minDistance = distance[id];
+                activeId = id;
+            }
+        }
+        if (activeId !== this.activeId) {
+            document.getElementById(this.getLinkId(this.activeId)).classList.remove('selected');
+            document.getElementById(this.getLinkId(activeId)).classList.add('selected');
+            this.activeId = activeId;
+            if (this.userEvent) {
+                // location.hash = activeId;
+            }
+        }
+    }
+    getLinkId(id) {
+        return `link_${id}`;
+    }
+}
+//# sourceMappingURL=Grammar.js.map
