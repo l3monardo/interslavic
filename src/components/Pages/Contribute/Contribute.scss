@@ -1,0 +1,112 @@
+@import '../../../colors.scss';
+
+.contribute-container {
+    width: 600px;
+    margin: 50px auto;
+    max-width: 100%;
+}
+
+.contribute {
+    padding: 0 16px;
+    padding-bottom: 300px;
+
+    &__title {
+        font-family: inherit;
+        font-weight: 800;
+        font-size: 20px;
+        line-height: normal;
+        margin: 0;
+        margin-bottom: 24px;
+        color: var(--dark); // Adaptable text
+
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        &-icon {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    /* Standard Group Styling */
+    &__group {
+        margin-bottom: 24px;
+
+        &-header {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0;
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+
+        &-body {
+            background-color: var(--header-background-color);
+            border: var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+    }
+
+    &__info-text {
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--muted-text-color);
+        margin: 0;
+    }
+
+    &__label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--dark);
+    }
+
+    &__field-margin {
+        height: 16px;
+    }
+
+    &__submit-container {
+        margin-top: 16px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* Error Highlights */
+    .error-highlight {
+        .input-text__input,
+        .textarea__native {
+            border-color: var(--invalid-color) !important;
+            
+            &:focus {
+                box-shadow: 0 0 0 2px transparentize(#ef4444, 0.8) !important;
+            }
+        }
+    }
+}
+
+body.color-theme--light .contribute {
+    .error-highlight {
+        .input-text__input,
+        .textarea__native {
+            background-color: transparentize(#ef4444, 0.95);
+        }
+    }
+}
+
+body.color-theme--dark .contribute {
+    .error-highlight {
+        .input-text__input,
+        .textarea__native {
+            background-color: transparentize(#ef4444, 0.85);
+        }
+    }
+}
