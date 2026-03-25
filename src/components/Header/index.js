@@ -1,2 +1,2 @@
 export * from './Header';
-//# sourceMappingURL=index.js.map
+export { Header as default } from './Header';

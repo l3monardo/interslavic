@@ -34,6 +34,7 @@ export const ResultsList =
         const fromText = useFromText()
         const short = useShortCardView()
         const empty = results.length === 0 && fromText.length !== 0
+        const idle = results.length === 0 && fromText.length === 0
         const scrollWidth = useScrollbarWidth()
         const [scrollIsVisible, setScrollBarVisible] = useState(false)
         const loading = useLoading()
@@ -42,27 +43,24 @@ export const ResultsList =
             setScrollBarVisible(isScrollBarVisible(containerRef))
         }, [containerRef, results.length])
 
-        if (!results || !results.length) {
-            if (empty && !loading) {
-                return (
-                    <ResultsEmpty showReset={posFilter !== ''}/>
-                )
-            }
-
-            return null
-        }
-
         const translatedPart = Dictionary.getPercentsOfTranslated()[lang.from === 'isv' ? lang.to : lang.from]
 
         return (
             <div
-                className={classNames('results-list', { short })}
+                className={classNames('results-list', {
+                    short,
+                    empty: empty && !loading,
+                    idle,
+                })}
                 data-testid="results-list"
                 style={{
                     paddingLeft: scrollIsVisible ? scrollWidth : 0,
                 }}
                 ref={containerRef}
             >
+                {empty && !loading && (
+                    <ResultsEmpty showReset={posFilter !== ''}/>
+                )}
                 {results.map((item: ITranslateResult, index) => (
                     <ResultsCard
                         item={item}
@@ -73,7 +71,7 @@ export const ResultsList =
                         caseQuestions={caseQuestions}
                     />
                 ))}
-                {results.some((item) => !item.checked) && (
+                {results.length > 0 && results.some((item) => !item.checked) && (
                     <div className="results-list__message-for-users">
                         {t('notVerifiedText').replace('part%', `${translatedPart}%`)}
                         {' '}

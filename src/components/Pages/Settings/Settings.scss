@@ -8,7 +8,41 @@
 
   &__title {
     font-size: var(--text-l);
-    margin-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__title-icon {
+    font-size: var(--text-l);
+    opacity: 0.75;
+  }
+
+  &__group {
+    margin-bottom: 28px;
+  }
+
+  &__group-header {
+    font-size: var(--text-s);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--primary-color);
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+
+  &__group-body {
+    padding: 0 4px;
+  }
+
+  &__group-divider {
+    height: 1px;
+    background: var(--border-color, rgba(128, 128, 128, 0.2));
+    margin: 10px 0;
   }
 
   &__reload {
@@ -30,6 +64,9 @@
     font-weight: 600;
     margin-bottom: 8px;
     color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   &__add-langs-title {

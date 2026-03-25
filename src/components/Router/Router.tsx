@@ -16,6 +16,7 @@ const Viewer = lazy(() => import('components/Pages/Viewer'))
 const About = lazy(() => import('components/Pages/About'))
 const DictionaryPage = lazy(() => import('components/Pages/DictionaryPage'))
 const Settings = lazy(() => import('components/Pages/Settings'))
+const Contribute = lazy(() => import('components/Pages/Contribute'))
 
 
 const PageLoader = () => {
@@ -68,6 +69,12 @@ function renderPageContent(page: string) {
             return (
                 <Suspense fallback={<PageLoader />}>
                     <About />
+                </Suspense>
+            )
+        case 'contribute':
+            return (
+                <Suspense fallback={<PageLoader />}>
+                    <Contribute />
                 </Suspense>
             )
 

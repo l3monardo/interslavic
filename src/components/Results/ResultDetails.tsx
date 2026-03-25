@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import cn from 'classnames';
+import { wordDefinitions } from '../../data/definitions';
 import { useSelector, useDispatch } from 'react-redux';
 import { IMainState } from 'reducers';
 import { ITranslateResult, Dictionary } from 'services';
@@ -41,6 +42,8 @@ interface IResultDetailsProps {
 }
 
 const ResultTranslations: React.FC<{ item: ITranslateResult; dictionaryLanguages: string[]; itemKey: string }> = React.memo(({ item, dictionaryLanguages, itemKey }) => {
+    const flavorisationType = useSelector((state: IMainState) => state.flavorisationType);
+    const [defScript, setDefScript] = useState<'latin' | 'cyrillic' | 'glagolitic'>('latin');
     const [expandedWiktionary, setExpandedWiktionary] = useState<{ url: string; word: string; language: string } | null>(null);
     const addLangsFiltered = ADD_LANGS.filter((lang) => dictionaryLanguages.includes(lang));
     const allLangs = [ISV, EN, ...LANGS, ...addLangsFiltered];
@@ -162,12 +165,66 @@ const ResultTranslations: React.FC<{ item: ITranslateResult; dictionaryLanguages
         return () => document.removeEventListener('click', handleClick);
     }, [expandedWiktionary, itemKey]);
 
+    const definition = item.isv
+        .split(',')
+        .map(w => w.trim().toLowerCase())
+        .map(w => wordDefinitions[w])
+        .find(Boolean) || null;
+
+    const getRenderedText = (text: string) => {
+        if (!text) return '';
+        switch (defScript) {
+            case 'cyrillic': return getCyrillic(text, flavorisationType);
+            case 'glagolitic': return getGlagolitic(text, flavorisationType);
+            default: return getLatin(text, flavorisationType);
+        }
+    };
+
+    const renderedDefinition = getRenderedText(definition);
+    const renderedTitle = getRenderedText('Definicija');
+
+    const handleCopy = () => {
+        if (renderedDefinition) {
+            navigator.clipboard.writeText(renderedDefinition);
+        }
+    };
+
     return (
         <div className="result-details result-details--translations">
             {wordStatus && <div className="word-status">{wordStatus.icon}&nbsp;{t(wordStatus.text)}</div>}
             <div className="table-scroll-container">
                 <Table data={tableData.filter(row => row.length > 0)} />
             </div>
+            {definition && (
+                <div className="word-definition-box">
+                    <div className="word-definition-box__header">
+                        <span className="word-definition-box__title">{renderedTitle}</span>
+                        <div className="word-definition-box__controls">
+                            <button
+                                className="word-definition-box__copy"
+                                onClick={handleCopy}
+                                title={t('copyDefinition')}
+                            >
+                                ⎘
+                            </button>
+                            <LineSelector
+                                className="word-definition-box__script-toggle"
+                                options={[
+                                    { name: 'Lat', value: 'latin' },
+                                    { name: 'Cyr', value: 'cyrillic' },
+                                    { name: 'Gla', value: 'glagolitic' },
+                                ]}
+                                value={defScript}
+                                onSelect={(val) => setDefScript(val as any)}
+                            />
+                        </div>
+                    </div>
+                    <hr className="word-definition-box__divider" />
+                    <div className="word-definition-box__text">
+                        {renderedDefinition}
+                    </div>
+                </div>
+            )}
             {expandedWiktionary && (
                 <div className="wiktionary-expansion">
                     <div className="wiktionary-expansion__header">

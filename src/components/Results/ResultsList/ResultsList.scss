@@ -20,6 +20,16 @@
   &.short {
     padding: var(--gap-size-s) 0;
   }
+
+  &.idle {
+    min-height: clamp(260px, 42vh, 420px);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  &.empty {
+    min-height: clamp(260px, 42vh, 420px);
+  }
 }
 
 @media (width <=1024px) {
@@ -29,6 +39,16 @@
 
     &.short {
       padding: var(--gap-size-s) !important;
+    }
+
+    &.idle {
+      min-height: clamp(220px, 34vh, 320px);
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    &.empty {
+      min-height: clamp(220px, 34vh, 320px);
     }
   }
 }

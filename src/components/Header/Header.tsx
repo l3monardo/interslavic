@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 
 import { t } from 'translations'
 
-import { setPageAction, fromTextAction, runSearch } from 'actions'
+import { fromTextAction, runSearch, setPageAction } from 'actions'
 
 import {
     useBadges,
@@ -22,6 +22,17 @@ interface IHeaderProps {
     isEmbed?: boolean
 }
 
+const FORUM_URL = 'https://interslavic.forum'
+
+const ICONS: Record<string, string> = {
+    dictionary: '📖',
+    viewer: '📋',
+    settings: '⚙️',
+    about: '❓',
+    contribute: '🤝',
+    grammar: '📚',
+}
+
 export const Header =
     ({ isEmbed }: IHeaderProps) => {
         useInterfaceLang()
@@ -32,10 +43,12 @@ export const Header =
         const [menuIsVisible, setMenuIsVisible] = useState(false)
         const [mobile, setMobile] = useState(false)
         const [menuAnim, setMenuAnim] = useState(false)
+        const [logoExpanded, setLogoExpanded] = useState(false)
+        const [touchMode, setTouchMode] = useState(false)
         const collapseMenu = useCallback(() => setMenuIsVisible(false), [setMenuIsVisible])
         const enabledPages = useEnabledPages()
-        const navRef = useRef<HTMLDivElement>()
-        const logoRef = useRef<HTMLDivElement>()
+        const navRef = useRef<HTMLDivElement | null>(null)
+        const logoRef = useRef<HTMLDivElement | null>(null)
         const navRefWidth = useRef<number>(0)
 
         const onResize = useCallback(() => {
@@ -66,24 +79,84 @@ export const Header =
             onResize()
         }, [navRef, logoRef, enabledPages, onResize])
 
+        useEffect(() => {
+            const mediaQuery = window.matchMedia('(hover: none), (pointer: coarse)')
+            const updateTouchMode = () => {
+                const nextTouchMode = mediaQuery.matches
+                setTouchMode(nextTouchMode)
+
+                if (!nextTouchMode) {
+                    setLogoExpanded(false)
+                }
+            }
+
+            updateTouchMode()
+
+            if (mediaQuery.addEventListener) {
+                mediaQuery.addEventListener('change', updateTouchMode)
+
+                return () => {
+                    mediaQuery.removeEventListener('change', updateTouchMode)
+                }
+            }
+
+            mediaQuery.addListener(updateTouchMode)
+
+            return () => {
+                mediaQuery.removeListener(updateTouchMode)
+            }
+        }, [])
+
         const filteredPages = useMemo(() => (
-            pages.filter(({ value }) => (defaultPages.includes(value) || enabledPages.includes(value)))
+            pages.filter(({ value }) => {
+                if (value === 'grammar') return false // Explicitly hide grammar as requested
+                
+                return (defaultPages.includes(value) || enabledPages.includes(value))
+            })
         ), [pages, enabledPages])
 
         const showBadges = useMemo(() => (
             filteredPages.some(({ value }) => (badges.includes(value)))
         ), [badges, filteredPages])
 
+        const activePageData = useMemo(() => {
+            return pages.find(({ value }) => value === page) || pages[0]
+        }, [page])
+
+        useEffect(() => {
+            const handleClickOutside = (event: MouseEvent) => {
+                if (navRef.current && !navRef.current.contains(event.target as Node)) {
+                    setMenuIsVisible(false)
+                }
+            }
+            document.addEventListener('mousedown', handleClickOutside)
+            
+            return () => document.removeEventListener('mousedown', handleClickOutside)
+        }, [navRef])
+
+        const onLogoClick = () => {
+            dispatch(fromTextAction(''))
+            dispatch(runSearch())
+            dispatch(setPageAction('dictionary'))
+            setMenuIsVisible(false)
+        }
+
+        const onLogoFlagClick = () => {
+            if (touchMode) {
+                setLogoExpanded((current) => !current)
+                
+                return
+            }
+
+            onLogoClick()
+        }
+
         if (isEmbed) {
             return (
                 <header className={classNames('header', 'embed-mode')}>
                     <div
                         className="logo-img"
-                        onClick={() => {
-                            dispatch(fromTextAction(''))
-                            dispatch(runSearch())
-                            dispatch(setPageAction('dictionary'))
-                        }}
+                        onClick={onLogoClick}
                         style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                     >
                         <LogoIcon style={{ width: 20, height: 20 }} />
@@ -110,58 +183,72 @@ export const Header =
             <header
                 className={classNames('header', { active: menuIsVisible, mobile })}
             >
-                <h1
-                    className="logo"
+                <div
+                    className={classNames('logo-button', {
+                        active: page === 'dictionary',
+                        expanded: logoExpanded,
+                        'touch-mode': touchMode,
+                    })}
                     ref={logoRef}
                 >
-                    <span
-                        className="logo-img"
+                    <button
+                        type="button"
+                        className="logo-flag"
+                        onClick={onLogoFlagClick}
+                        aria-expanded={touchMode ? logoExpanded : undefined}
+                        aria-label={touchMode ? 'Toggle interslavic.forum link' : 'Go to dictionary'}
+                    >
+                        <span className="logo-img">
+                            <LogoIcon />
+                        </span>
+                    </button>
+                    <a
+                        className="logo-text-link"
+                        href={FORUM_URL}
+                        aria-label="Open interslavic.forum"
+                    >
+                        <span className="logo-text">interslavic.forum</span>
+                    </a>
+                </div>
+                <div className="nav-dropdown" ref={navRef as any}>
+                    {page !== 'dictionary' && (
+                        <button
+                            type="button"
+                            className="back-arrow-button"
+                            onClick={onLogoClick}
+                            aria-label="Back to Dictionary"
+                            title="Back to Dictionary"
+                        >
+                            ←
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        className={classNames('dropdown-trigger', { 'expanded': menuIsVisible, 'badge': showBadges })}
+
                         onClick={() => {
-                            dispatch(fromTextAction(''))
-                            dispatch(runSearch())
-                            dispatch(setPageAction('dictionary'))
-                            setMenuIsVisible(false)
+                            setMenuIsVisible(!menuIsVisible)
+                            setMenuAnim(true)
                         }}
                     >
-                        <LogoIcon />
-                    </span>
-                    <a
-                        href="https://interslavic.forum"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="logo-text"
-                        data-testid="main-title"
-                    >
-                        interslavic.forum
-                    </a>
-                </h1>
-                <button
-                    type="button"
-                    className={classNames('show-menu-button', { 'expanded': menuIsVisible, 'badge': showBadges })}
-                    aria-label="Menu button"
-                    onClick={() => {
-                        setMenuIsVisible(!menuIsVisible)
-                        setMenuAnim(true)
-                    }}
-                >
-                    <span className={classNames('lines', { active: menuIsVisible })} />
-                </button>
-                <nav
-                    className={classNames('menu', { active: menuIsVisible, anim: menuAnim })}
-                    ref={navRef}
-                >
-                    {filteredPages.map((({ title, value, subTitle }) => (
-                        <MenuItem
-                            key={value}
-                            title={title}
-                            subTitle={subTitle}
-                            value={value}
-                            active={page === value}
-                            hasBadge={badges.includes(value)}
-                            onClick={collapseMenu}
-                        />
-                    )))}
-                </nav>
+                        <span className="dropdown-trigger-icon">{ICONS[activePageData.value] || ''}</span>
+                        <span className="dropdown-trigger-text">{t(activePageData.title)}</span>
+                        <span className="dropdown-trigger-arrow">▾</span>
+                    </button>
+                    <nav className={classNames('menu', { active: menuIsVisible, anim: menuAnim })}>
+                        {filteredPages.map((({ title, value, subTitle }) => (
+                            <MenuItem
+                                key={value}
+                                title={title}
+                                subTitle={subTitle}
+                                value={value}
+                                active={page === value}
+                                hasBadge={badges.includes(value)}
+                                onClick={collapseMenu}
+                            />
+                        )))}
+                    </nav>
+                </div>
             </header>
         )
     }
@@ -197,7 +284,8 @@ const MenuItem = ({
             data-sub-title={subTitle}
             href={`/${value}`}
         >
-            {t(title)}
+            <span className="menu-item-icon">{ICONS[value] || ''}</span>
+            <span className="menu-item-text">{t(title)}</span>
         </a>
     )
 }

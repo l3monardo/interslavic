@@ -11,6 +11,10 @@
     height: calc(100% - 60px);
   }
 
+  &.dictionaryRoute {
+    overflow: visible;
+  }
+
   &.show {
     opacity: 1;
     transition: opacity var(--animation-duration) ease-in-out;

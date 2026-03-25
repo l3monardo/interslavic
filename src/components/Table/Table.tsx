@@ -11,9 +11,11 @@ interface ITableProps {
 export class Table extends Component<ITableProps> {
     public render() {
         return (
-            <table className="table">
-                <tbody>{this.renderBody()}</tbody>
-            </table>
+            <div className="table-shell">
+                <table className="table">
+                    <tbody>{this.renderBody()}</tbody>
+                </table>
+            </div>
         )
     }
 

@@ -95,148 +95,173 @@ export const Settings =
 
         return (
             <div className="settings">
-                <h5 className="settings__title">{t('settingsTitle')}</h5>
-                <hr />
-                <p className="settings__section-title">{t('interfaceLanguage')}</p>
-                <Selector
-                    options={interfaceLanguageList}
-                    value={interfaceLang}
-                    onSelect={(langCode: string) => dispatch(setInterfaceLang(langCode))}
-                />
-                <hr />
-                <Checkbox
-                    className="bold"
-                    title={t('shortCardView')}
-                    checked={isShortCardView}
-                    onChange={() => dispatch(changeCardViewAction())}
-                />
-                <hr />
-                <Checkbox
-                    className="bold"
-                    title={t('darkTheme')}
-                    checked={isDarkTheme}
-                    onChange={() => dispatch(toggleThemeAction(isDarkTheme ? 'light' : 'dark'))}
-                />
-                <hr />
-                <p className="settings__section-title">{t('showSlavicWordsInAlphabets')}</p>
-                {
-                    Object.keys(alphabets).map((alphabet) => (
+                <h5 className="settings__title">
+                    <span className="settings__title-icon">⚙</span>
+                    {t('settingsTitle')}
+                </h5>
+
+                {/* ── Interface ── */}
+                <div className="settings__group">
+                    <p className="settings__group-header">{t('settingsSectionInterface')}</p>
+                    <div className="settings__group-body">
+                        <p className="settings__section-title">{t('interfaceLanguage')}</p>
+                        <Selector
+                            options={interfaceLanguageList}
+                            value={interfaceLang}
+                            onSelect={(langCode: string) => dispatch(setInterfaceLang(langCode))}
+                        />
+                        <div className="settings__group-divider" />
                         <Checkbox
-                            key={alphabet}
-                            title={t(alphabet)}
-                            checked={alphabets[alphabet]}
-                            onChange={() => dispatch(setAlphabets({ [alphabet]: !alphabets[alphabet] }))}
+                            className="bold"
+                            title={t('shortCardView')}
+                            checked={isShortCardView}
+                            onChange={() => dispatch(changeCardViewAction())}
                         />
-                    ))
-                }
-                <hr />
-                <p className="settings__section-title">{t('searchSensitiveLettersForInterslavic')}</p>
-                <div className="settings__isv-search-letters">
-                    {
-                        orthographySettings.map(([title, letters]) => (
-                            <div key={title}>
-                                <p>{t(title)}</p>
-                                {
-                                    letters.map(([title, value, action]) => (
-                                        <Checkbox
-                                            key={title}
-                                            title={title}
-                                            checked={isvSearchLetters.from.includes(value)}
-                                            onChange={() => dispatch(changeIsvSearchLetters(action))}
-                                        />
-                                    ))
-                                }
-                            </div>
-                        ))
-                    }
+                        <div className="settings__group-divider" />
+                        <Checkbox
+                            className="bold"
+                            title={t('darkTheme')}
+                            checked={isDarkTheme}
+                            onChange={() => dispatch(toggleThemeAction(isDarkTheme ? 'light' : 'dark'))}
+                        />
+                    </div>
                 </div>
-                <hr />
-                <Checkbox
-                    className="bold"
-                    title={t('searchByIsvWordForms')}
-                    checked={isvSearchByWordForms}
-                    onChange={() => dispatch(changeIsvSearchByWordForms(!isvSearchByWordForms))}
-                />
-                <hr />
-                <p className="settings__section-title">{t('orderOfCases')}</p>
-                <Selector
-                    options={orderOfCasesList.map((e) => {
-                        return {
-                            name: e.split(',').map((c) => t(`case${c[0].toUpperCase()}${c.slice(1)}`)).join(', '),
-                            value: e,
+
+                {/* ── Grammar ── */}
+                <div className="settings__group">
+                    <p className="settings__group-header">{t('settingsSectionGrammar')}</p>
+                    <div className="settings__group-body">
+                        <p className="settings__section-title">{t('showSlavicWordsInAlphabets')}</p>
+                        {
+                            Object.keys(alphabets).map((alphabet) => (
+                                <Checkbox
+                                    key={alphabet}
+                                    title={t(alphabet)}
+                                    checked={alphabets[alphabet]}
+                                    onChange={() => dispatch(setAlphabets({ [alphabet]: !alphabets[alphabet] }))}
+                                />
+                            ))
                         }
-                    })}
-                    value={orderOfCases.join(',')}
-                    onSelect={(orderOfCases: string) => dispatch(changeOrderOfCases(orderOfCases.split(',')))}
-                />
-                <hr />
-                <Checkbox
-                    className="bold"
-                    title={t('caseQuestionsForPrepositions')}
-                    checked={caseQuestions}
-                    onChange={() => dispatch(changeCaseQuestions(!caseQuestions))}
-                />
-                <hr />
-                <Checkbox
-                    className="bold"
-                    title={t('showImperfectAndPluperfect')}
-                    checked={displayImperfect}
-                    onChange={() => dispatch(changeDisplayImperfect(!displayImperfect))}
-                />
-                <hr />
-                <p className="settings__section-title">
-                    {t('addDictionaryLanguages')}
-                    {isLoading && (
-                        <Spinner
-                            size="10px"
-                            borderWidth="3px"
+                        <div className="settings__group-divider" />
+                        <p className="settings__section-title">{t('searchSensitiveLettersForInterslavic')}</p>
+                        <div className="settings__isv-search-letters">
+                            {
+                                orthographySettings.map(([title, letters]) => (
+                                    <div key={title}>
+                                        <p>{t(title)}</p>
+                                        {
+                                            letters.map(([title, value, action]) => (
+                                                <Checkbox
+                                                    key={title}
+                                                    title={title}
+                                                    checked={isvSearchLetters.from.includes(value)}
+                                                    onChange={() => dispatch(changeIsvSearchLetters(action))}
+                                                />
+                                            ))
+                                        }
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        <div className="settings__group-divider" />
+                        <Checkbox
+                            className="bold"
+                            title={t('searchByIsvWordForms')}
+                            checked={isvSearchByWordForms}
+                            onChange={() => dispatch(changeIsvSearchByWordForms(!isvSearchByWordForms))}
                         />
-                    )}
-                </p>
-                <div className={classNames('settings__add-langs', { 'settings__add-langs-loading': isLoading })}>
-                    {ADD_LANGS.map((lang) => {
-                        const checked = dictionaryLanguages.includes(lang)
-
-                        return (
-                            <Checkbox
-                                key={lang}
-                                title={t(`${lang}Lang`)}
-                                checked={checked}
-                                onChange={async () => {
-                                    setLoading(true)
-                                    await fetchLang(lang)
-
-                                    if (checked && from === lang) {
-                                        dispatch(langAction({
-                                            from: EN,
-                                            to,
-                                        }))
-                                    }
-
-                                    if (checked && to === lang) {
-                                        dispatch(langAction({
-                                            from,
-                                            to: EN,
-                                        }))
-                                    }
-
-                                    dispatch(changeDictionaryLangAction(lang))
-                                    dispatch(runSearch())
-                                    setLoading(false)
-                                }}
-                            />
-                        )
-                    })}
+                        <div className="settings__group-divider" />
+                        <p className="settings__section-title">{t('orderOfCases')}</p>
+                        <Selector
+                            options={orderOfCasesList.map((e) => {
+                                return {
+                                    name: e.split(',').map((c) => t(`case${c[0].toUpperCase()}${c.slice(1)}`)).join(', '),
+                                    value: e,
+                                }
+                            })}
+                            value={orderOfCases.join(',')}
+                            onSelect={(orderOfCases: string) => dispatch(changeOrderOfCases(orderOfCases.split(',')))}
+                        />
+                        <div className="settings__group-divider" />
+                        <Checkbox
+                            className="bold"
+                            title={t('caseQuestionsForPrepositions')}
+                            checked={caseQuestions}
+                            onChange={() => dispatch(changeCaseQuestions(!caseQuestions))}
+                        />
+                        <div className="settings__group-divider" />
+                        <Checkbox
+                            className="bold"
+                            title={t('showImperfectAndPluperfect')}
+                            checked={displayImperfect}
+                            onChange={() => dispatch(changeDisplayImperfect(!displayImperfect))}
+                        />
+                    </div>
                 </div>
-                <hr />
-                <div>
-                    <p className="settings__section-title">{t('devTools')}</p>
-                    <Checkbox
-                        key="viewer"
-                        title={t('viewerEnable')}
-                        checked={enabledPages.includes('viewer')}
-                        onChange={() => dispatch(togglePage('viewer'))}
-                    />
+
+                {/* ── Translations ── */}
+                <div className="settings__group">
+                    <p className="settings__group-header">{t('settingsSectionTranslations')}</p>
+                    <div className="settings__group-body">
+                        <p className="settings__section-title">
+                            {t('addDictionaryLanguages')}
+                            {isLoading && (
+                                <Spinner
+                                    size="10px"
+                                    borderWidth="3px"
+                                />
+                            )}
+                        </p>
+                        <div className={classNames('settings__add-langs', { 'settings__add-langs-loading': isLoading })}>
+                            {ADD_LANGS.map((lang) => {
+                                const checked = dictionaryLanguages.includes(lang)
+
+                                return (
+                                    <Checkbox
+                                        key={lang}
+                                        title={t(`${lang}Lang`)}
+                                        checked={checked}
+                                        onChange={async () => {
+                                            setLoading(true)
+                                            await fetchLang(lang)
+
+                                            if (checked && from === lang) {
+                                                dispatch(langAction({
+                                                    from: EN,
+                                                    to,
+                                                }))
+                                            }
+
+                                            if (checked && to === lang) {
+                                                dispatch(langAction({
+                                                    from,
+                                                    to: EN,
+                                                }))
+                                            }
+
+                                            dispatch(changeDictionaryLangAction(lang))
+                                            dispatch(runSearch())
+                                            setLoading(false)
+                                        }}
+                                    />
+                                )
+                            })}
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── Special ── */}
+                <div className="settings__group">
+                    <p className="settings__group-header">{t('settingsSectionSpecial')}</p>
+                    <div className="settings__group-body">
+                        <p className="settings__section-title">{t('devTools')}</p>
+                        <Checkbox
+                            key="viewer"
+                            title={t('viewerEnable')}
+                            checked={enabledPages.includes('viewer')}
+                            onChange={() => dispatch(togglePage('viewer'))}
+                        />
+                    </div>
                 </div>
             </div>
         )

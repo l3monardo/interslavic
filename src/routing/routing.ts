@@ -28,9 +28,14 @@ export const pages: IPage[] = [
         value: 'about',
         path: '/about',
     },
+    {
+        title: 'contributeTitle',
+        value: 'contribute',
+        path: '/contribute',
+    },
 ]
 
-export const defaultPages = ['dictionary', 'settings', 'about']
+export const defaultPages = ['dictionary', 'settings', 'about', 'contribute']
 
 export function goToPage(path: string) {
     // Navigate RELATIVE to current location if possible, or usually just use state
@@ -51,6 +56,7 @@ export function getPageFromPath(): string {
     if (currentPath.endsWith('/settings')) return 'settings'
     if (currentPath.endsWith('/about')) return 'about'
     if (currentPath.endsWith('/viewer')) return 'viewer'
+    if (currentPath.endsWith('/contribute')) return 'contribute'
 
     // Default to dictionary if no known suffix
     return 'dictionary'

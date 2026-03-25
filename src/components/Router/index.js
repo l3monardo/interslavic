@@ -1,2 +1,2 @@
 export * from './Router';
-//# sourceMappingURL=index.js.map
+export { Router as default } from './Router';

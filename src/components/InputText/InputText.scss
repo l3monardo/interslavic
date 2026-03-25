@@ -33,6 +33,35 @@
     }
   }
 
+  &__prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  &__prompt-icon {
+    flex: 0 0 auto;
+    font-size: 1.1em;
+    line-height: 1;
+  }
+
+  &__prompt-text {
+    overflow: hidden;
+    color: var(--muted-text-color);
+    white-space: nowrap;
+
+    &:empty {
+      display: none;
+    }
+  }
+
   &__clear-button {
     position: absolute;
     z-index: 10;
@@ -65,6 +94,12 @@
 
     &[disabled] {
       display: none;
+    }
+  }
+
+  &--prompt-cleared {
+    .input-text__prompt {
+      transform: translate(calc(-50% - 28px), -50%);
     }
   }
 }
